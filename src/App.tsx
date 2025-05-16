@@ -1,7 +1,15 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Register from './pages/auth/Register';
 
 function App() {
-  return <div className="text-4xl">HELLO WORLD</div>;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
