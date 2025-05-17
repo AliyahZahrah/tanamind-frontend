@@ -10,8 +10,16 @@ import {
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { useForm } from 'react-hook-form';
+import { MdOutlineLock } from 'react-icons/md';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import Footer from '../../components/Footer';
+import { useState } from 'react';
 
 const Register = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepassword, setShowRepassword] = useState(false);
+
   const form = useForm({
     defaultValues: {
       email: '',
@@ -90,13 +98,18 @@ const Register = () => {
                       </FormLabel>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <HiOutlineUser size={20} className="text-gray-500" />
+                          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                            <HiOutlineUser
+                              size={20}
+                              className="text-gray-500"
+                            />
+                          </span>
                         </div>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="Enter your name"
-                            className="pl-10 w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
+                            className="pl-10"
                           />
                         </FormControl>
                       </div>
@@ -113,14 +126,33 @@ const Register = () => {
                       <FormLabel className="block text-sm font-medium text-gray-700 mb-1">
                         Password
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
-                          placeholder="Enter your password"
-                          className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
-                        />
-                      </FormControl>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                          <MdOutlineLock size={20} />
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer"
+                          tabIndex={-1}
+                        >
+                          {showPassword ? (
+                            <FiEye size={15} />
+                          ) : (
+                            <FiEyeOff size={15} />
+                          )}
+                        </button>
+
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="Enter your password"
+                            className="pl-10 pr-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                          />
+                        </FormControl>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -134,14 +166,33 @@ const Register = () => {
                       <FormLabel className="block text-sm font-medium text-gray-700 mb-1">
                         Re-Password
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
-                          placeholder="Re-enter your password"
-                          className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
-                        />
-                      </FormControl>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                          <MdOutlineLock size={20} />
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => setShowRepassword((prev) => !prev)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer"
+                          tabIndex={-1}
+                        >
+                          {showRepassword ? (
+                            <FiEye size={15} />
+                          ) : (
+                            <FiEyeOff size={15} />
+                          )}
+                        </button>
+
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type={showRepassword ? 'text' : 'password'}
+                            placeholder="Re-enter your password"
+                            className="pl-10 pr-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                          />
+                        </FormControl>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -149,19 +200,24 @@ const Register = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#2d5d46] text-white py-2 rounded-md hover:bg-[#234536] transition-colors"
+                  className="w-full bg-[#2d5d46] text-white py-2 mt-2 rounded-md hover:bg-[#234536] transition-colors cursor-pointer"
                 >
                   Sign Up
                 </Button>
+                <div className="flex justify-center items-center text-sm text-gray-500">
+                  <span className="pr-1">Already have an account?</span>
+
+                  <Link to="/login" className="text-green-500">
+                    Login
+                  </Link>
+                </div>
               </form>
             </Form>
           </div>
         </div>
       </main>
 
-      <footer className="bg-white py-4 text-center text-gray-600 text-sm">
-        Kelompok CC25-CF338 @ Capstone Project Coding Camp 2025
-      </footer>
+      <Footer />
     </div>
   );
 };
