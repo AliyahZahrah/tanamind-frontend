@@ -12,22 +12,19 @@ import { Button } from '../../components/ui/button';
 import { useForm } from 'react-hook-form';
 import { MdOutlineLock } from 'react-icons/md';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer';
 import { useState } from 'react';
 import AuthNavbar from '../../components/AuthNavbar';
 
-const Register = () => {
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showRepassword, setShowRepassword] = useState(false);
 
   const form = useForm({
     defaultValues: {
       email: '',
-      name: '',
-      phoneNumber: '',
       password: '',
-      repassword: '',
     },
   });
 
@@ -40,25 +37,25 @@ const Register = () => {
       <AuthNavbar />
 
       <main className="flex-1 bg-[#d8ede3] flex items-center justify-center py-6">
-        <div className="bg-[#f6f7f1] max-w-4xl w-full mx-4 md:mx-auto p-8 rounded-xl shadow-xl">
+        <div className="bg-[#f6f7f1] max-w-4xl w-full mx-4 md:mx-auto p-12 rounded-xl shadow-xl">
           <div className="grid md:grid-cols-2 gap-8">
             <div className="flex flex-col justify-center">
-              <h1 className="text-lg font-bold mb-4">Create Your Account</h1>
+              <h1 className="text-lg font-bold mb-4">Welcome Back!</h1>
               <p className="text-sm text-justify text-gray-600 mb-6">
-                Let's start planting today! Sign up now to monitor plants,
-                detect diseases, and get the best guidance!
+                Welcome back! Let's check your plant's condition and start the
+                planting day!
               </p>
               <div className="flex justify-center">
                 <img
-                  src="../src/assets/register.png"
+                  src="../src/assets/login.png"
                   alt="Person planting"
-                  className="w-96 object-cover"
+                  className="w-80 object-cover"
                 />
               </div>
             </div>
 
             <Form {...form}>
-              <form onSubmit={onSubmit} className="space-y-4">
+              <form onSubmit={onSubmit} className="space-y-4 pt-4">
                 <FormField
                   control={form.control}
                   name="email"
@@ -74,36 +71,6 @@ const Register = () => {
                             {...field}
                             type="email"
                             placeholder="Enter your email address"
-                            className="pl-10"
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="block text-sm font-medium text-gray-700 mb-1">
-                        Name
-                      </FormLabel>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                            <HiOutlineUser
-                              size={20}
-                              className="text-gray-500"
-                            />
-                          </span>
-                        </div>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Enter your name"
                             className="pl-10"
                           />
                         </FormControl>
@@ -153,57 +120,30 @@ const Register = () => {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="repassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="block text-sm font-medium text-gray-700 mb-1">
-                        Re-Password
-                      </FormLabel>
-                      <div className="relative">
-                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                          <MdOutlineLock size={20} />
-                        </span>
-
-                        <button
-                          type="button"
-                          onClick={() => setShowRepassword((prev) => !prev)}
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer"
-                          tabIndex={-1}
-                        >
-                          {showRepassword ? (
-                            <FiEye size={15} />
-                          ) : (
-                            <FiEyeOff size={15} />
-                          )}
-                        </button>
-
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type={showRepassword ? 'text' : 'password'}
-                            placeholder="Re-enter your password"
-                            className="pl-10 pr-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                          />
-                        </FormControl>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="flex justify-end text-sm">
+                  <Link to="/forgot-password" className="text-[#6DB193]">
+                    Forgot Password?
+                  </Link>
+                </div>
 
                 <Button
                   type="submit"
                   className="w-full bg-[#2d5d46] text-white py-2 mt-2 rounded-md hover:bg-[#234536] transition-colors cursor-pointer"
                 >
-                  Sign Up
+                  Login
+                </Button>
+                <Button
+                  className="w-full text-gray-500 rounded-md transition-colors cursor-pointer"
+                  variant={'outline'}
+                >
+                  <FcGoogle size={30} />
+                  <p>Continue With Google</p>
                 </Button>
                 <div className="flex justify-center items-center text-sm text-gray-500">
-                  <span className="pr-1">Already have an account?</span>
+                  <span className="pr-1">Don't have an account?</span>
 
-                  <Link to="/login" className="text-[#6DB193]">
-                    Login
+                  <Link to="/register" className="text-[#6DB193]">
+                    Sign up
                   </Link>
                 </div>
               </form>
@@ -217,4 +157,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
