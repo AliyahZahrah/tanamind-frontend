@@ -1,4 +1,4 @@
-import { HiOutlineMail, HiOutlineUser } from 'react-icons/hi';
+import { HiOutlineMail } from 'react-icons/hi';
 import {
   Form,
   FormControl,
