@@ -50,7 +50,7 @@ const Register = () => {
               </p>
               <div className="flex justify-center">
                 <img
-                  src="../src/assets/register.png"
+                  src="../img/register.png"
                   alt="Person planting"
                   className="w-96 object-cover"
                 />
