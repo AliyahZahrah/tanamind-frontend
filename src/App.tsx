@@ -6,19 +6,24 @@ import ForgetPassword from './pages/auth/ForgetPassword';
 import NewPassword from './pages/auth/NewPassword';
 import Dashboard from './pages/home/Dashboard';
 import GuidancePage from './pages/guidance/GuidancePage';
+import Layout from './Layout';
+import AuthLayout from './pages/auth/AuthLayout';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/guidance" element={<GuidancePage />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/guidance" element={<GuidancePage />} />
+        </Route>
 
-        {/* Auth Routes */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgetPassword />} />
-        <Route path="/new-password" element={<NewPassword />} />
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgetPassword />} />
+          <Route path="/new-password" element={<NewPassword />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

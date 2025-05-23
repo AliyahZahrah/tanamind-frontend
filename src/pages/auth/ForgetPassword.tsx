@@ -11,8 +11,6 @@ import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import Footer from '../../components/Footer';
-import AuthNavbar from '../../components/AuthNavbar';
 
 const ForgetPassword = () => {
   const form = useForm({
@@ -27,8 +25,6 @@ const ForgetPassword = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <AuthNavbar />
-
       <main className="flex-1 bg-[#d8ede3] flex items-center justify-center py-6">
         <div className="bg-[#f6f7f1] max-w-xl w-full mx-4 p-6 md:p-8 rounded-xl shadow-xl flex flex-col items-center">
           <div className="flex flex-col justify-center">
@@ -91,8 +87,6 @@ const ForgetPassword = () => {
           </Form>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

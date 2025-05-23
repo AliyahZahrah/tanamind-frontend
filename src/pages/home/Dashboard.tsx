@@ -4,7 +4,6 @@ import Footer from '../../components/Footer';
 const Dashboard = () => {
   return (
     <>
-      <Navbar />
       <main className="flex flex-col md:flex-row min-h-[80vh] bg-gray-100 py-8 px-4 md:px-8">
         {/* Main Content */}
         <section className="flex-1 md:pr-6">
@@ -141,7 +140,6 @@ const Dashboard = () => {
           </div>
         </aside>
       </main>
-      <Footer />
     </>
   );
 };

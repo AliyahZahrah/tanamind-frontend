@@ -12,8 +12,6 @@ import { Button } from '../../components/ui/button';
 import { useForm } from 'react-hook-form';
 import { MdOutlineLock } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import Footer from '../../components/Footer';
-import AuthNavbar from '../../components/AuthNavbar';
 
 const Register = () => {
   const form = useForm({
@@ -32,8 +30,6 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <AuthNavbar />
-
       <main className="flex-1 bg-[#d8ede3] flex items-center justify-center py-6">
         <div className="bg-[#f6f7f1] max-w-4xl w-full mx-4 md:mx-auto p-8 rounded-xl shadow-xl">
           <div className="grid md:grid-cols-2 gap-8">
@@ -190,8 +186,6 @@ const Register = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };
