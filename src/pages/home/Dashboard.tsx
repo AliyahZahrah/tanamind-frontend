@@ -1,5 +1,5 @@
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
 const Dashboard = () => {
   return (
@@ -21,7 +21,8 @@ const Dashboard = () => {
               </h2>
               <p className="text-gray-700 text-lg mb-6">
                 Dapatkan panduan lengkap untuk menanam selada, tomat, atau cabai
-                hidroponik Anda. Pelajari cara merawat dan mengatasi penyakit umum.
+                hidroponik Anda. Pelajari cara merawat dan mengatasi penyakit
+                umum.
               </p>
               <button className="bg-green-500 text-white px-6 py-3 rounded-full text-lg font-semibold flex items-center hover:bg-green-600 transition duration-300">
                 Lihat Panduan Tanaman
@@ -74,7 +75,11 @@ const Dashboard = () => {
 
           {/* Current Weather */}
           <div className="bg-white p-4 rounded-lg flex flex-col items-center shadow mb-4">
-            <img src="/icons/sunny.png" alt="Sunny" className="w-12 h-12 mb-2" />
+            <img
+              src="/icons/sunny.png"
+              alt="Sunny"
+              className="w-12 h-12 mb-2"
+            />
             <p className="text-2xl font-bold text-yellow-600">30°C</p>
             <p className="text-gray-600">Sunny</p>
             <p className="text-gray-500 text-sm">Sekarang</p>
@@ -126,11 +131,7 @@ const Dashboard = () => {
 
             {/* Rain */}
             <div className="bg-white p-4 rounded-lg flex items-center shadow">
-              <img
-                src="/icons/rain.png"
-                alt="Rain"
-                className="w-8 h-8 mr-3"
-              />
+              <img src="/icons/rain.png" alt="Rain" className="w-8 h-8 mr-3" />
               <div>
                 <p className="text-lg font-bold text-blue-500">16°C</p>
                 <p className="text-gray-600 text-sm">Rain</p>
