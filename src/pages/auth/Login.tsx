@@ -11,16 +11,12 @@ import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { useForm } from 'react-hook-form';
 import { MdOutlineLock } from 'react-icons/md';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer';
-import { useState } from 'react';
 import AuthNavbar from '../../components/AuthNavbar';
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-
   const form = useForm({
     defaultValues: {
       email: '',
@@ -47,7 +43,7 @@ const Login = () => {
               </p>
               <div className="flex justify-center">
                 <img
-                  src="../src/assets/login.png"
+                  src="/img/login.png"
                   alt="Person planting"
                   className="w-80 object-cover"
                 />
@@ -95,21 +91,13 @@ const Login = () => {
 
                         <button
                           type="button"
-                          onClick={() => setShowPassword((prev) => !prev)}
                           className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer"
                           tabIndex={-1}
-                        >
-                          {showPassword ? (
-                            <FiEye size={15} />
-                          ) : (
-                            <FiEyeOff size={15} />
-                          )}
-                        </button>
+                        ></button>
 
                         <FormControl>
                           <Input
                             {...field}
-                            type={showPassword ? 'text' : 'password'}
                             placeholder="Enter your password"
                             className="pl-10 pr-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                           />
