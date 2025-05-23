@@ -13,8 +13,6 @@ import { useForm } from 'react-hook-form';
 import { MdOutlineLock } from 'react-icons/md';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
-import Footer from '../../components/Footer';
-import AuthNavbar from '../../components/AuthNavbar';
 
 const Login = () => {
   const form = useForm({
@@ -30,8 +28,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <AuthNavbar />
-
       <main className="flex-1 bg-[#d8ede3] flex items-center justify-center py-6">
         <div className="bg-[#f6f7f1] max-w-4xl w-full mx-4 md:mx-auto p-12 rounded-xl shadow-xl">
           <div className="grid md:grid-cols-2 gap-8">
@@ -139,8 +135,6 @@ const Login = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };
