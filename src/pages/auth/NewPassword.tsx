@@ -1,4 +1,3 @@
-import { HiOutlineMail } from 'react-icons/hi';
 import {
   Form,
   FormControl,
@@ -10,7 +9,6 @@ import {
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer';
 import AuthNavbar from '../../components/AuthNavbar';
 import { MdOutlineLock } from 'react-icons/md';
