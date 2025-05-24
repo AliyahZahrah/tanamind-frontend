@@ -21,12 +21,15 @@ import {
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Alert, AlertDescription } from '../../components/ui/alert';
+
 import { loginSchema, type LoginFormData } from '../../lib/validation/auth';
 import { useAuth } from '../../hooks/use-auth';
+import { useGoogleAuth } from '../../hooks/use-google-auth';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login, isLoading, error, clearError } = useAuth();
+  const { initiateGoogleLogin } = useGoogleAuth();
   const navigate = useNavigate();
 
   const form = useForm<LoginFormData>({
@@ -47,7 +50,7 @@ const Login = () => {
 
       setTimeout(() => {
         navigate('/');
-      }, 2000);
+      }, 1000);
     } catch (error: any) {
       // Handle field-specific errors if API returns them
       if (error.errors) {
@@ -64,8 +67,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    // TODO: Implement Google OAuth login
-    toast.info('Google login will be implemented soon!');
+    initiateGoogleLogin();
   };
 
   return (

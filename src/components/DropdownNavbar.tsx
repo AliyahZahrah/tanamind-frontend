@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FaUser, FaSignOutAlt, FaChevronDown, FaCog } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaChevronDown } from 'react-icons/fa';
 import { useAuth } from '../hooks/use-auth';
 
 interface UserDropdownProps {
@@ -11,7 +10,7 @@ interface UserDropdownProps {
     name: string;
   };
   onClose?: () => void;
-  emailVisibilityClass?: string; // 👈 ini baru
+  emailVisibilityClass?: string;
 }
 
 const UserDropdown = ({
@@ -23,7 +22,6 @@ const UserDropdown = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { logout, isLoading } = useAuth();
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -48,14 +46,8 @@ const UserDropdown = ({
     }
   };
 
-  const closeDropdown = () => {
-    setIsOpen(false);
-    onClose?.();
-  };
-
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center space-x-2 text-gray-600 font-medium cursor-pointer"
@@ -75,16 +67,13 @@ const UserDropdown = ({
         />
       </button>
 
-      {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
-          {/* User Info */}
           <div className="px-4 py-3 border-b border-gray-100">
             <p className="text-sm font-medium text-gray-900">{user.name}</p>
             <p className="text-sm text-gray-500 truncate">{user.email}</p>
           </div>
 
-          {/* Menu Items */}
           <div className="py-1">
             <button
               onClick={handleLogout}

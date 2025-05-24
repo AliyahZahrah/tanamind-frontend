@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HiOutlineMail, HiOutlineUser } from 'react-icons/hi';
@@ -71,7 +70,6 @@ const Register = () => {
       <main className="flex-1 bg-[#d8ede3] flex items-center justify-center py-6">
         <div className="bg-[#f6f7f1] max-w-4xl w-full mx-4 md:mx-auto p-8 rounded-xl shadow-xl">
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Left side - Image and description */}
             <div className="flex flex-col justify-center">
               <h1 className="text-xl lg:text-2xl font-bold mb-4">
                 Create Your Account!

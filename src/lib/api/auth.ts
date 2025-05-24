@@ -1,5 +1,6 @@
 import { apiClient } from './client';
 import type { RegisterFormData, LoginFormData } from '../validation/auth';
+import { jwtDecode } from 'jwt-decode';
 
 export interface AuthResponse {
   success: boolean;
@@ -15,6 +16,14 @@ export interface AuthResponse {
   };
 }
 
+interface JwtPayload {
+  email: string;
+  name?: string;
+  userId?: string;
+  exp?: number;
+  iat?: number;
+}
+
 export interface ApiError {
   success: false;
   message: string;
@@ -22,7 +31,6 @@ export interface ApiError {
 }
 
 export const authApi = {
-  // Register new user
   register: async (data: RegisterFormData): Promise<AuthResponse> => {
     try {
       const response = await apiClient.post('/auth/signup', {
@@ -32,7 +40,6 @@ export const authApi = {
         repassword: data.repassword,
       });
 
-      // ❌ Jangan simpan token di sini
       return {
         success: response.data.status === 200,
         message: response.data.message,
@@ -71,6 +78,7 @@ export const authApi = {
           JSON.stringify({
             id: resData.data.userId,
             email: resData.data.email,
+            name: resData.data.name,
           })
         );
 
@@ -82,7 +90,7 @@ export const authApi = {
             user: {
               id: resData.data.userId,
               email: resData.data.email,
-              name: '', // ← tidak tersedia, kosongkan saja atau fetch nanti
+              name: resData.data.name,
               createdAt: '', // ← tidak tersedia
             },
           },
@@ -104,6 +112,54 @@ export const authApi = {
     }
   },
 
+  // Google OAuth login - redirect to backend OAuth endpoint
+  loginWithGoogle: () => {
+    console.log('🔗 Redirecting to Google OAuth...');
+    const backendUrl =
+      import.meta.env.VITE_BASE_API_URL || 'http://localhost:5000';
+    window.location.href = `${backendUrl}/auth/google`;
+  },
+
+  handleOAuthCallback: (): Promise<AuthResponse> => {
+    return new Promise((resolve, reject) => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        if (!token) {
+          return reject({
+            success: false,
+            message: 'Missing token in callback URL',
+          });
+        }
+
+        const decoded = jwtDecode<JwtPayload>(token);
+
+        const user = {
+          id: decoded.userId || '',
+          email: decoded.email,
+          name: decoded.name || '',
+          createdAt: '', // tidak tersedia
+        };
+
+        // Simpan token dan user data di localStorage
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user_data', JSON.stringify(user));
+
+        resolve({
+          success: true,
+          message: 'Google login successful',
+          data: { token, user },
+        });
+      } catch (err) {
+        reject({
+          success: false,
+          message: 'Failed to process OAuth callback',
+        });
+      }
+    });
+  },
+
   // Logout user
   logout: async (): Promise<void> => {
     try {
@@ -114,22 +170,6 @@ export const authApi = {
       // Always clear local storage
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user_data');
-    }
-  },
-
-  // Get current user profile
-  getProfile: async () => {
-    try {
-      const response = await apiClient.get('/auth/profile');
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.data) {
-        throw error.response.data as ApiError;
-      }
-      throw {
-        success: false,
-        message: 'Failed to fetch user profile',
-      } as ApiError;
     }
   },
 };

@@ -33,7 +33,7 @@ const DiagnosticsPage = () => {
     },
     {
       id: 'selada' as const,
-      name: 'Selada',
+      name: 'Selada', 
       icon: '🥬',
       color: 'bg-green-100 hover:bg-green-200 border-green-300',
       selectedColor: 'bg-green-500 text-white',

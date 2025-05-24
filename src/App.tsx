@@ -10,6 +10,7 @@ import Layout from './Layout';
 import AuthLayout from './pages/auth/AuthLayout';
 import DiagnosticsPage from './pages/Diagnostics/DiagnosticsPage';
 import { Toaster } from 'sonner';
+import AuthCallback from './pages/auth/AuthCallbackGoogle';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
           <Route path="/new-password" element={<NewPassword />} />
+          <Route path="/callback-google" element={<AuthCallback />} />
         </Route>
       </Routes>
     </BrowserRouter>
