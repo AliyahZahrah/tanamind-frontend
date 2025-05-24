@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { FaRegCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import {
+  FaRegCheckCircle,
+  FaExclamationTriangle,
+  FaSeedling,
+  FaLeaf,
+  FaTint,
+  FaWind,
+  FaBroom,
+  FaSync,
+} from 'react-icons/fa';
 import {
   MdDashboard,
   MdExplore,
@@ -9,6 +18,7 @@ import {
   MdSettings,
   MdPerson,
 } from 'react-icons/md';
+import PlantTabButtonGroup from '../../components/PlantTabButton';
 
 type PlantTab = 'cabai' | 'selada' | 'tomat';
 
@@ -21,7 +31,9 @@ type Disease = {
 };
 
 const GuidancePage = () => {
-  const [activeTab, setActiveTab] = useState<PlantTab>('cabai');
+  const [activeTab, setActiveTab] = useState<'cabai' | 'selada' | 'tomat'>(
+    'cabai'
+  );
 
   const diseases: Record<string, Disease[]> = {
     cabai: [
@@ -105,54 +117,56 @@ const GuidancePage = () => {
     tomat: [],
   };
 
+  const tips = [
+    {
+      id: 1,
+      icon: <FaSeedling className="text-green-600 text-2xl" />,
+      title: 'Pemilihan Bibit',
+      description:
+        'Gunakan bibit berkualitas dan bersertifikat untuk memastikan tanaman yang sehat dan produktif.',
+    },
+    {
+      id: 2,
+      icon: <FaLeaf className="text-green-600 text-2xl" />,
+      title: 'Lingkungan Optimal',
+      description:
+        'Jaga sirkulasi udara dan kelembaban yang sesuai untuk pertumbuhan tanaman.',
+    },
+    {
+      id: 3,
+      icon: <FaTint className="text-blue-600 text-2xl" />,
+      title: 'Penyiraman Tepat',
+      description:
+        'Siram tanaman di pagi atau sore hari untuk membantu akar dan daun menyerap air dengan optimal.',
+    },
+    {
+      id: 4,
+      icon: <FaWind className="text-gray-600 text-2xl" />,
+      title: 'Sirkulasi Udara',
+      description:
+        'Pastikan jarak tanam cukup untuk sirkulasi udara yang baik antar tanaman.',
+    },
+    {
+      id: 5,
+      icon: <FaBroom className="text-orange-600 text-2xl" />,
+      title: 'Pembersihan Rutin',
+      description:
+        'Bersihkan daun yang sakit atau tua untuk mencegah penyebaran penyakit.',
+    },
+    {
+      id: 6,
+      icon: <FaSync className="text-purple-600 text-2xl" />,
+      title: 'Rotasi Tanaman',
+      description:
+        'Lakukan rotasi tanaman untuk memutus siklus hidup patogen dalam tanah.',
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex justify-between items-center">
-            <nav className="flex items-center space-x-6">
-              <a
-                href="#"
-                className="flex items-center gap-1 text-gray-600 hover:text-green-700"
-              >
-                <MdDashboard className="text-lg" />
-                <span>Dashboard</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-1 bg-green-700 text-white px-3 py-1 rounded-md"
-              >
-                <MdExplore className="text-lg" />
-                <span>Discover</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-1 text-gray-600 hover:text-green-700"
-              >
-                <MdGridView className="text-lg" />
-                <span>Organizer</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-1 text-gray-600 hover:text-green-700"
-              >
-                <MdSettings className="text-lg" />
-                <span>Settings</span>
-              </a>
-              <div className="flex items-center gap-2 text-gray-700">
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                  <MdPerson className="text-lg" />
-                </div>
-                <span>User</span>
-              </div>
-            </nav>
-          </div>
-        </div>
-      </header>
-
       <main className="flex-1 bg-[#d8ede3] py-6">
-        <div className="container mx-auto px-4">
-          <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="container mx-auto px-2">
+          <div className="bg-[#F7F7F2] rounded-lg shadow-sm p-6">
             <h1 className="text-2xl font-bold text-gray-800 mb-2">
               Panduan Penanaman Hidroponik
             </h1>
@@ -162,37 +176,11 @@ const GuidancePage = () => {
             </p>
 
             {/* Plant Tabs */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              <button
-                onClick={() => setActiveTab('cabai')}
-                className={`py-3 rounded-md font-medium transition-colors ${
-                  activeTab === 'cabai'
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-orange-100 text-orange-800 hover:bg-orange-200'
-                }`}
-              >
-                Cabai
-              </button>
-              <button
-                onClick={() => setActiveTab('selada')}
-                className={`py-3 rounded-md font-medium transition-colors ${
-                  activeTab === 'selada'
-                    ? 'bg-green-500 text-white'
-                    : 'bg-green-100 text-green-800 hover:bg-green-200'
-                }`}
-              >
-                Selada
-              </button>
-              <button
-                onClick={() => setActiveTab('tomat')}
-                className={`py-3 rounded-md font-medium transition-colors ${
-                  activeTab === 'tomat'
-                    ? 'bg-red-500 text-white'
-                    : 'bg-red-100 text-red-800 hover:bg-red-200'
-                }`}
-              >
-                Tomat
-              </button>
+            <div className="p-6">
+              <PlantTabButtonGroup
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
             </div>
 
             {/* Plant Info */}
@@ -277,13 +265,37 @@ const GuidancePage = () => {
                 </div>
               ))}
             </div>
+            <div className="py-8">
+              <div className=" mx-auto">
+                <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
+                  Tips Pencegahan Umum
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mx-auto">
+                  {tips.map((tip) => (
+                    <div
+                      key={tip.id}
+                      className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 mt-1">{tip.icon}</div>
+                        <div>
+                          <h3 className="font-bold text-lg text-gray-800 mb-2">
+                            {tip.title}
+                          </h3>
+                          <p className="text-gray-600 text-sm leading-relaxed">
+                            {tip.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
-
-      <footer className="bg-white py-4 text-center text-gray-600 text-sm">
-        Kelompok CC25-CF338 @ Capstone Project Coding Camp 2025
-      </footer>
     </div>
   );
 };
