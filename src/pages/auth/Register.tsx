@@ -51,10 +51,8 @@ const Register = () => {
         navigate('/login');
       }, 2000);
     } catch (error: any) {
-      // Error is handled by useAuth hook
       console.error('Registration error:', error);
 
-      // Handle field-specific errors if API returns them
       if (error.errors) {
         Object.entries(error.errors).forEach(([field, messages]) => {
           if (Array.isArray(messages) && messages.length > 0) {
@@ -75,7 +73,9 @@ const Register = () => {
           <div className="grid md:grid-cols-2 gap-8">
             {/* Left side - Image and description */}
             <div className="flex flex-col justify-center">
-              <h1 className="text-lg font-bold mb-4">Create Your Account</h1>
+              <h1 className="text-xl lg:text-2xl font-bold mb-4">
+                Create Your Account!
+              </h1>
               <p className="text-sm text-justify text-gray-600 mb-6">
                 Let's start planting today! Sign up now to monitor plants,
                 detect diseases, and get the best guidance!
@@ -89,9 +89,7 @@ const Register = () => {
               </div>
             </div>
 
-            {/* Right side - Form */}
             <div>
-              {/* Error Alert */}
               {error && (
                 <Alert variant="destructive" className="mb-4">
                   <AlertDescription>{error}</AlertDescription>
@@ -103,7 +101,6 @@ const Register = () => {
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-4"
                 >
-                  {/* Email Field */}
                   <FormField
                     control={form.control}
                     name="email"
@@ -129,7 +126,6 @@ const Register = () => {
                     )}
                   />
 
-                  {/* Name Field */}
                   <FormField
                     control={form.control}
                     name="name"
@@ -154,7 +150,6 @@ const Register = () => {
                     )}
                   />
 
-                  {/* Password Field */}
                   <FormField
                     control={form.control}
                     name="password"
@@ -180,7 +175,6 @@ const Register = () => {
                     )}
                   />
 
-                  {/* Confirm Password Field */}
                   <FormField
                     control={form.control}
                     name="repassword"
@@ -205,8 +199,6 @@ const Register = () => {
                       </FormItem>
                     )}
                   />
-
-                  {/* Submit Button */}
                   <Button
                     type="submit"
                     className="w-full bg-[#2d5d46] text-white py-2 mt-6 rounded-md hover:bg-[#234536] transition-colors cursor-pointer"
@@ -215,7 +207,6 @@ const Register = () => {
                     {isLoading ? 'Creating Account...' : 'Sign Up'}
                   </Button>
 
-                  {/* Login Link */}
                   <div className="flex justify-center items-center text-sm text-gray-500 mt-4">
                     <span className="pr-1">Already have an account?</span>
                     <Link

@@ -19,7 +19,9 @@ export const useAuth = () => {
 
       if (response.success) {
         // Registration successful, redirect to dashboard or plant guide
-        navigate('/plant-guide');
+        navigate('/login');
+        // Trigger storage event to update navbar
+        window.dispatchEvent(new Event('storage'));
         return response;
       }
     } catch (err) {
@@ -40,12 +42,17 @@ export const useAuth = () => {
 
       if (response.success) {
         // Login successful, redirect to dashboard
-        navigate('/plant-guide');
+        navigate('/');
+        // Trigger storage event to update navbar
+        window.dispatchEvent(new Event('storage'));
         return response;
       }
     } catch (err) {
       const apiError = err as ApiError;
-      setError(apiError.message || 'Login failed. Please try again.');
+      setError(
+        apiError.message ||
+          'Login failed. Please check your credentials and try again.'
+      );
       throw err;
     } finally {
       setIsLoading(false);
@@ -57,10 +64,16 @@ export const useAuth = () => {
 
     try {
       await authApi.logout();
-      navigate('/login');
     } catch (err) {
       console.error('Logout error:', err);
+      // Even if logout fails on server, clear local data
     } finally {
+      // Clear local storage
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_data');
+      // Trigger storage event to update navbar
+      window.dispatchEvent(new Event('storage'));
+      navigate('/login');
       setIsLoading(false);
     }
   };

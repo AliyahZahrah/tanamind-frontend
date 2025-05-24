@@ -25,23 +25,27 @@ export const authApi = {
   // Register new user
   register: async (data: RegisterFormData): Promise<AuthResponse> => {
     try {
-      const response = await apiClient.post<AuthResponse>('/auth/signup', {
+      const response = await apiClient.post('/auth/signup', {
         email: data.email,
         name: data.name,
         password: data.password,
         repassword: data.repassword,
       });
 
-      // Store token and user data
-      if (response.data.success && response.data.data.token) {
-        localStorage.setItem('auth_token', response.data.data.token);
-        localStorage.setItem(
-          'user_data',
-          JSON.stringify(response.data.data.user)
-        );
-      }
-
-      return response.data;
+      // ❌ Jangan simpan token di sini
+      return {
+        success: response.data.status === 200,
+        message: response.data.message,
+        data: {
+          token: response.data.data.token, // tetap kirimkan token kalau kamu butuh validasi manual
+          user: {
+            id: response.data.data.userId,
+            email: response.data.data.email,
+            name: '',
+            createdAt: '',
+          },
+        },
+      };
     } catch (error: any) {
       if (error.response?.data) {
         throw error.response.data as ApiError;
@@ -56,25 +60,46 @@ export const authApi = {
   // Login user
   login: async (data: LoginFormData): Promise<AuthResponse> => {
     try {
-      const response = await apiClient.post<AuthResponse>('/auth/login', data);
+      const response = await apiClient.post('/auth/login', data);
+      const resData = response.data;
 
-      // Store token and user data
-      if (response.data.success && response.data.data.token) {
-        localStorage.setItem('auth_token', response.data.data.token);
+      if (resData.status === 200 && resData.data.token) {
+        // Simpan token dan user data
+        localStorage.setItem('auth_token', resData.data.token);
         localStorage.setItem(
           'user_data',
-          JSON.stringify(response.data.data.user)
+          JSON.stringify({
+            id: resData.data.userId,
+            email: resData.data.email,
+          })
         );
+
+        return {
+          success: true,
+          message: resData.message,
+          data: {
+            token: resData.data.token,
+            user: {
+              id: resData.data.userId,
+              email: resData.data.email,
+              name: '', // ← tidak tersedia, kosongkan saja atau fetch nanti
+              createdAt: '', // ← tidak tersedia
+            },
+          },
+        };
       }
 
-      return response.data;
+      throw {
+        success: false,
+        message: resData.message || 'Login failed',
+      };
     } catch (error: any) {
       if (error.response?.data) {
         throw error.response.data as ApiError;
       }
       throw {
         success: false,
-        message: 'Network error. Please check your connection and try again.',
+        message: 'Network error. Please try again.',
       } as ApiError;
     }
   },
