@@ -8,6 +8,7 @@ import Dashboard from './pages/home/Dashboard';
 import GuidancePage from './pages/guidance/GuidancePage';
 import Layout from './Layout';
 import AuthLayout from './pages/auth/AuthLayout';
+import DiagnosticsPage from './pages/Diagnostics/DiagnosticsPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/guidance" element={<GuidancePage />} />
+          <Route path="/diagnostics" element={<DiagnosticsPage />} />
         </Route>
 
         <Route element={<AuthLayout />}>

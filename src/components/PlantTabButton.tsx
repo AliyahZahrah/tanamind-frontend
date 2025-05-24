@@ -25,7 +25,7 @@ const PlantTabButtonGroup = ({
           <Button
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
-            className={`w-full py-2 text-sm font-semibold rounded-lg transition-colors cursor-pointer ${
+            className={`w-full py-2 text-sm font-semibold rounded-md transition-colors cursor-pointer ${
               isActive
                 ? 'bg-[#2d5d46] text-white'
                 : 'bg-transparent text-[#2d5d46] border border-[#2d5d46] hover:bg-[#e0ebe7]'
