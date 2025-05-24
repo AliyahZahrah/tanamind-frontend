@@ -9,10 +9,13 @@ import GuidancePage from './pages/guidance/GuidancePage';
 import Layout from './Layout';
 import AuthLayout from './pages/auth/AuthLayout';
 import DiagnosticsPage from './pages/Diagnostics/DiagnosticsPage';
+import { Toaster } from 'sonner';
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
+
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
