@@ -265,7 +265,7 @@ const GuidancePage = () => {
                 </div>
               ))}
             </div>
-            <div className="py-8">
+            <div className="py-12">
               <div className=" mx-auto">
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
                   Tips Pencegahan Umum

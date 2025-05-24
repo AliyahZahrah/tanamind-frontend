@@ -1,15 +1,20 @@
+'use client';
+
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useUser } from '../hooks/use-user';
+import UserDropdown from './DropdownNavbar';
 
 const Navbar = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, isLoading } = useUser();
 
   const menuItems = [
     { name: 'Dashboard', href: '/' },
-    { name: 'Guidance', href: '/guidance' },
+    { name: 'Guidance', href: '/plant-guide' },
     { name: 'Diagnostics', href: '/diagnostics' },
     { name: 'Plantings', href: '/plantings' },
   ];
@@ -36,9 +41,78 @@ const Navbar = () => {
     </div>
   );
 
+  const renderAuthSection = () => {
+    if (isLoading) {
+      return (
+        <div className="hidden md:flex">
+          <div className="bg-gray-200 animate-pulse rounded-md h-9 w-20"></div>
+        </div>
+      );
+    }
+
+    if (isAuthenticated && user) {
+      return (
+        <div className="hidden md:flex">
+          <UserDropdown user={user} />
+        </div>
+      );
+    }
+
+    return (
+      <Button
+        asChild
+        className="hidden md:flex bg-[#345e4e] hover:bg-[#2c4f40] text-white font-medium text-sm px-4 py-1.5 rounded-md"
+      >
+        <Link to="/login">Login</Link>
+      </Button>
+    );
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const renderMobileAuthSection = () => {
+    if (isLoading) {
+      return (
+        <div className="bg-gray-200 animate-pulse rounded-md h-9 w-full mt-4"></div>
+      );
+    }
+
+    if (isAuthenticated && user) {
+      return (
+        <div className="mt-4 mx-auto">
+          <UserDropdown
+            user={user}
+            onClose={() => setIsMobileMenuOpen(false)}
+            emailVisibilityClass="sm:inline"
+          />
+        </div>
+      );
+    }
+
+    return (
+      <Button
+        asChild
+        className="bg-[#345e4e] hover:bg-[#2c4f40] text-white mx-auto font-medium text-sm px-4 py-1.5 rounded-md mt-4"
+      >
+        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+          Login
+        </Link>
+      </Button>
+    );
+  };
+
   return (
     <nav className="bg-[#F7F7F2] px-6 py-3 shadow-sm">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="w-full mx-auto flex items-center justify-between">
         <Link to="/">
           <img
             src="/img/logo-tanamind.png"
@@ -47,23 +121,16 @@ const Navbar = () => {
           />
         </Link>
 
-        <div className="hidden md:flex text-sm md:text-medium justify-center items-center space-x-6">
+        <div className="hidden md:flex text-sm md:text-medium justify-center items-center space-x-8">
           {renderMenu()}
         </div>
 
-        <Button
-          asChild
-          className="hidden md:flex bg-[#345e4e] hover:bg-[#2c4f40] text-white font-medium text-sm px-4 py-1.5 rounded-md"
-        >
-          <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-            Login
-          </Link>
-        </Button>
+        {renderAuthSection()}
 
         <div className="md:hidden transition-all duration-700">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-gray-700 focus:outline-none cursor-pointer "
+            className="text-gray-700 focus:outline-none cursor-pointer"
           >
             {isMobileMenuOpen ? (
               <HiOutlineX size={24} />
@@ -80,14 +147,7 @@ const Navbar = () => {
           <div className="md:hidden mt-4 space-y-2 cursor-pointer">
             {renderMenu()}
           </div>
-          <Button
-            asChild
-            className="bg-[#345e4e] hover:bg-[#2c4f40] text-white mx-auto font-medium text-sm px-4 py-1.5 rounded-md"
-          >
-            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-              Login
-            </Link>
-          </Button>
+          {renderMobileAuthSection()}
         </div>
       )}
     </nav>
