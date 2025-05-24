@@ -11,9 +11,14 @@ interface UserDropdownProps {
     name: string;
   };
   onClose?: () => void;
+  emailVisibilityClass?: string; // 👈 ini baru
 }
 
-const UserDropdown = ({ user, onClose }: UserDropdownProps) => {
+const UserDropdown = ({
+  user,
+  onClose,
+  emailVisibilityClass,
+}: UserDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { logout, isLoading } = useAuth();
@@ -57,7 +62,11 @@ const UserDropdown = ({ user, onClose }: UserDropdownProps) => {
         disabled={isLoading}
       >
         <FaUser size={20} />
-        <span className="hidden lg:inline lg:max-w-fit truncate">
+        <span
+          className={`hidden ${
+            emailVisibilityClass || 'lg:inline'
+          } max-w-fit truncate`}
+        >
           {user.email}
         </span>
         <FaChevronDown

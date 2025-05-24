@@ -3,7 +3,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '../hooks/use-user';
 import UserDropdown from './DropdownNavbar';
 
@@ -68,6 +68,17 @@ const Navbar = () => {
     );
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const renderMobileAuthSection = () => {
     if (isLoading) {
       return (
@@ -77,10 +88,11 @@ const Navbar = () => {
 
     if (isAuthenticated && user) {
       return (
-        <div className="mt-4">
+        <div className="mt-4 mx-auto">
           <UserDropdown
             user={user}
             onClose={() => setIsMobileMenuOpen(false)}
+            emailVisibilityClass="sm:inline"
           />
         </div>
       );
