@@ -25,8 +25,8 @@ const NewPassword = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-[#d8ede3] flex items-center justify-center py-6">
-        <div className="bg-[#f6f7f1] max-w-xl w-full mx-4 p-6 md:p-8 rounded-xl shadow-xl flex flex-col items-center">
+      <main className="flex-1 bg-[rgba(109,177,147,0.3)] flex items-center justify-center py-6">
+        <div className="bg-white max-w-xl w-full mx-4 p-6 md:p-8 rounded-xl shadow-xl flex flex-col items-center">
           <div className="flex flex-col justify-center">
             <h1 className="text-lg font-bold mb-4 text-center">New Password</h1>
             <p className="text-sm text-center text-gray-600 mb-6">
@@ -35,7 +35,7 @@ const NewPassword = () => {
             </p>
             <div className="flex justify-center">
               <img
-                src="/img/Password.png"
+                src="/img/new-password.png"
                 alt="Person planting"
                 className="w-32"
               />

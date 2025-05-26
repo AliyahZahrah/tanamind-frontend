@@ -72,8 +72,8 @@ const Login = () => {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      <main className="flex-1 bg-[#d8ede3] flex items-center justify-center p-4">
-        <div className="bg-[#f6f7f1] w-full max-w-4xl p-8 lg:p-12 rounded-xl shadow-xl">
+      <main className="flex-1 bg-[rgba(109,177,147,0.3)] flex items-center justify-center p-4">
+        <div className="bg-white w-full max-w-4xl p-8 lg:p-12 rounded-xl shadow-xl">
           <div className="grid md:grid-cols-2 gap-8 h-full">
             {/* Left Column - Image and Text */}
             <div className="flex flex-col justify-center">
