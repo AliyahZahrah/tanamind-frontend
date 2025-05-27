@@ -25,8 +25,8 @@ const ForgetPassword = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-[#d8ede3] flex items-center justify-center py-6">
-        <div className="bg-[#f6f7f1] max-w-xl w-full mx-4 p-6 md:p-8 rounded-xl shadow-xl flex flex-col items-center">
+      <main className="flex-1 bg-[rgba(109,177,147,0.3)] flex items-center justify-center py-6">
+        <div className="bg-white max-w-xl w-full mx-4 p-6 md:p-8 rounded-xl shadow-xl flex flex-col items-center">
           <div className="flex flex-col justify-center">
             <h1 className="text-lg font-bold mb-4 text-center">
               Forgot Password
@@ -37,7 +37,7 @@ const ForgetPassword = () => {
             </p>
             <div className="flex justify-center">
               <img
-                src="/img/Forgot password.png"
+                src="/img/forgot-password.png"
                 alt="Person planting"
                 className="w-40"
               />

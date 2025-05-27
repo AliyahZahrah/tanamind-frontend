@@ -14,7 +14,7 @@ const Navbar = () => {
 
   const menuItems = [
     { name: 'Dashboard', href: '/' },
-    { name: 'Guidance', href: '/plant-guide' },
+    { name: 'Guidance', href: '/guidance' },
     { name: 'Diagnostics', href: '/diagnostics' },
     { name: 'Plantings', href: '/plantings' },
   ];
@@ -61,9 +61,12 @@ const Navbar = () => {
     return (
       <Button
         asChild
-        className="hidden md:flex bg-[#345e4e] hover:bg-[#2c4f40] text-white font-medium text-sm px-4 py-1.5 rounded-md"
+        className="hidden md:flex bg-[#345e4e] hover:bg-[#2c4f40] text-white font-medium text-sm px-4 py-1.5 rounded-md items-center"
       >
-        <Link to="/login">Login</Link>
+        <Link to="/login" className="flex items-center">
+          <img src="/icons/log-in.png" alt="Login" data-ai-hint="login icon" className="w-5 h-5 mr-2" />
+          Login
+        </Link>
       </Button>
     );
   };
@@ -103,7 +106,8 @@ const Navbar = () => {
         asChild
         className="bg-[#345e4e] hover:bg-[#2c4f40] text-white mx-auto font-medium text-sm px-4 py-1.5 rounded-md mt-4"
       >
-        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
+          <img src="/icons/log-in.png" alt="Login" data-ai-hint="login icon" className="w-5 h-5 mr-2" />
           Login
         </Link>
       </Button>

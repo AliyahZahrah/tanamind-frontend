@@ -11,6 +11,7 @@ import AuthLayout from './pages/auth/AuthLayout';
 import DiagnosticsPage from './pages/Diagnostics/DiagnosticsPage';
 import { Toaster } from 'sonner';
 import AuthCallback from './pages/auth/AuthCallbackGoogle';
+import PlantingsPage from './pages/plantings/PlantingsPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/guidance" element={<GuidancePage />} />
           <Route path="/diagnostics" element={<DiagnosticsPage />} />
+          <Route path="/plantings" element={<PlantingsPage />} />
         </Route>
 
         <Route element={<AuthLayout />}>
