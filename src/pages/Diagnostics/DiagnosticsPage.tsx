@@ -6,6 +6,7 @@ import { useState, useRef } from 'react';
 import { FaStethoscope, FaUpload, FaCamera, FaSearch } from 'react-icons/fa';
 import { MdImage } from 'react-icons/md';
 import DiagnosisHistory from '../../components/DiagnosisHistory';
+import { diagnosisApi } from '../../lib/api/diagnosis';
 
 type PlantType = 'cabai' | 'tomat' | 'selada' | null;
 
@@ -33,7 +34,7 @@ const DiagnosticsPage = () => {
     },
     {
       id: 'selada' as const,
-      name: 'Selada', 
+      name: 'Selada',
       icon: '🥬',
       color: 'bg-green-100 hover:bg-green-200 border-green-300',
       selectedColor: 'bg-green-500 text-white',
@@ -68,22 +69,18 @@ const DiagnosticsPage = () => {
   };
 
   const handleTakePhoto = () => {
-    // Simulate camera capture
     setIsUploading(true);
     setUploadedFileName('camera_capture.jpg');
 
-    // Simulate camera process
     setTimeout(() => {
-      // For demo purposes, use a placeholder image
       setUploadedImage(
         '/placeholder.svg?height=300&width=400&text=Camera+Photo'
       );
       setIsUploading(false);
-    }, 1500); // Simulate 1.5 second camera capture time
+    }, 1500);
   };
 
   const handleEditImage = () => {
-    // Reset the file input and show options to re-upload or take new photo
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -92,44 +89,32 @@ const DiagnosticsPage = () => {
     setIsUploading(false);
   };
 
-  const handleStartDiagnosis = () => {
-    if (!selectedPlant) {
-      alert('Silakan pilih jenis tanaman terlebih dahulu');
-      return;
-    }
-    if (!uploadedImage) {
-      alert('Silakan unggah foto tanaman terlebih dahulu');
+  const handleStartDiagnosis = async () => {
+    if (!selectedPlant || !fileInputRef.current?.files?.[0]) {
+      alert('Pilih tanaman dan unggah foto terlebih dahulu');
       return;
     }
 
-    // TODO: Implement actual diagnosis logic
-    // This would typically send the image to an AI service for analysis
-    console.log(
-      'Starting diagnosis for:',
-      selectedPlant,
-      'with image:',
-      uploadedImage
-    );
-    alert(`Memulai diagnosa untuk tanaman ${selectedPlant}...`);
-
-    // Navigate to results page or show loading state
-    // Example: navigate('/diagnosis-results', { state: { plant: selectedPlant, image: uploadedImage } })
+    try {
+      const file = fileInputRef.current.files[0];
+      const result = await diagnosisApi.predict(selectedPlant, file);
+      console.log('Diagnosis Result:', result);
+    } catch (error: any) {
+      console.error('Prediction error:', error);
+      console.log(selectedPlant);
+      alert(error.message || 'Gagal melakukan diagnosa');
+    }
   };
 
   const handleViewDetail = (diagnosisId: string) => {
-    // Navigate to diagnosis detail page
     console.log('Viewing diagnosis detail:', diagnosisId);
     alert(`Menampilkan detail diagnosa ${diagnosisId}`);
-    // Example: navigate(`/diagnosis-detail/${diagnosisId}`)
   };
 
   const handleFilter = () => {
-    // Open filter modal or dropdown
     console.log('Opening filter options');
     alert('Filter options: Tanggal, Jenis Penyakit, Status');
   };
-
-  // Check if diagnosis can start
   const canStartDiagnosis = selectedPlant && uploadedImage && !isUploading;
 
   return (
@@ -150,17 +135,16 @@ const DiagnosticsPage = () => {
               awal dan saran penanganan.
             </p>
 
-            {/* Plant Selection */}
             <div className="mb-8">
               <h2 className="text-lg font-bold text-gray-800 mb-4">
                 Pilih Jenis Tanaman
               </h2>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-4 cursor-pointer">
                 {plants.map((plant) => (
                   <button
                     key={plant.id}
                     onClick={() => setSelectedPlant(plant.id)}
-                    className={`p-6 rounded-lg border-2 transition-all ${
+                    className={`p-6 rounded-lg border-2 transition-all cursor-pointer ${
                       selectedPlant === plant.id
                         ? plant.selectedColor
                         : `${plant.color} border-gray-200`
@@ -173,7 +157,6 @@ const DiagnosticsPage = () => {
               </div>
             </div>
 
-            {/* Image Upload */}
             <div className="mb-8">
               <h2 className="text-lg font-bold text-gray-800 mb-4">
                 Unggah Foto Tanaman
