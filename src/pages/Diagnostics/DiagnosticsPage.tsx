@@ -101,7 +101,6 @@ const DiagnosticsPage = () => {
       console.log('Diagnosis Result:', result);
     } catch (error: any) {
       console.error('Prediction error:', error);
-      console.log(selectedPlant);
       alert(error.message || 'Gagal melakukan diagnosa');
     }
   };
@@ -207,7 +206,7 @@ const DiagnosticsPage = () => {
                   // Show Edit button when image is uploaded
                   <button
                     onClick={handleEditImage}
-                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <FaUpload />
                     Edit Gambar
@@ -218,7 +217,7 @@ const DiagnosticsPage = () => {
                     <button
                       onClick={handleUploadClick}
                       disabled={isUploading}
-                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 ${
+                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 cursor-pointer ${
                         isUploading
                           ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                           : 'bg-green-700 text-white hover:bg-green-800'
@@ -230,7 +229,7 @@ const DiagnosticsPage = () => {
                     <button
                       onClick={handleTakePhoto}
                       disabled={isUploading}
-                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 ${
+                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 cursor-pointer ${
                         isUploading
                           ? 'bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300'
                           : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -257,7 +256,7 @@ const DiagnosticsPage = () => {
               <button
                 onClick={handleStartDiagnosis}
                 disabled={!canStartDiagnosis}
-                className={`py-3 px-8 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 mx-auto ${
+                className={`py-3 px-8 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 mx-auto cursor-pointer ${
                   canStartDiagnosis
                     ? 'bg-green-700 text-white hover:bg-green-800 hover:scale-105 shadow-lg'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'

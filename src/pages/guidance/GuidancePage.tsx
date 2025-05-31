@@ -1,166 +1,99 @@
-'use client';
+import React, { useState, useEffect } from 'react';
 
-import { useState } from 'react';
+import { Book, Info, ShieldCheck, AlertCircle } from 'lucide-react';
+
 import {
-  FaRegCheckCircle,
-  FaExclamationTriangle,
-  FaSeedling,
-  FaLeaf,
-  FaTint,
-  FaWind,
-  FaBroom,
-  FaSync,
-} from 'react-icons/fa';
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '../../components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
 import {
-  MdDashboard,
-  MdExplore,
-  MdGridView,
-  MdSettings,
-  MdPerson,
-} from 'react-icons/md';
-import PlantTabButtonGroup from '../../components/PlantTabButton';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '../../components/ui/dialog';
 
-type PlantTab = 'cabai' | 'selada' | 'tomat';
+import { PlantDiseasePreview } from '../../components/PlantDiseaseCard';
+import { PlantTipsCard } from '../../components/PlantTipsCard'; // Pastikan ini adalah nama yang benar
 
-type Disease = {
+import { diseaseApi } from '../../lib/api/disease';
+import { plantInfo, tips, type PlantTab } from '../../utils/plantData';
+
+interface Disease {
   id: string;
+  label: string;
   name: string;
-  scientificName: string;
-  symptoms: string[];
-  management: string[];
-};
+  penyebab: string;
+  deskripsi: string;
+  pencegahan: string[];
+  pengendalian: string[];
+  tanaman: 'TOMAT' | 'SELADA' | 'CABAI';
+}
 
-const GuidancePage = () => {
-  const [activeTab, setActiveTab] = useState<'cabai' | 'selada' | 'tomat'>(
-    'cabai'
-  );
+const GuidancePage: React.FC = () => {
+  const [allDiseases, setAllDiseases] = useState<Disease[]>([]);
+  const [isLoadingDiseases, setIsLoadingDiseases] = useState(true);
+  const [errorDiseases, setErrorDiseases] = useState<string | null>(null);
 
-  const diseases: Record<string, Disease[]> = {
-    cabai: [
-      {
-        id: 'bercak-daun',
-        name: 'Bercak daun',
-        scientificName: 'Cercospora capsici',
-        symptoms: [
-          'Bercak berbentuk bulat/tidak teratur',
-          'Daun berbintik dan mudah gugur',
-        ],
-        management: [
-          'Pemangkasan daun terinfeksi',
-          'Semprot fungisida',
-          'Hindari penyiraman dari atas',
-        ],
-      },
-      {
-        id: 'early-blight',
-        name: 'Early Blight',
-        scientificName: 'Alternaria solani',
-        symptoms: [
-          'Bercak coklat dengan lingkaran target',
-          'Muncul di daun bagian bawah',
-        ],
-        management: [
-          'Rotasi tanaman',
-          'Aplikasikan fungisida',
-          'Hindari siram berlebihan',
-        ],
-      },
-      {
-        id: 'late-blight',
-        name: 'Late Blight',
-        scientificName: 'Phytophthora infestans',
-        symptoms: ['Bercak gelap dengan', 'Serangan cepat saat lembab'],
-        management: [
-          'Aplikasi fungisida preventif',
-          'Drainase memadai',
-          'Kurangi kelembaban',
-        ],
-      },
-      {
-        id: 'leaf-mold',
-        name: 'Leaf Mold',
-        scientificName: 'Fulvia fulva',
-        symptoms: ['Bercak kuning di atas daun', 'Lapisan jamur di bawah daun'],
-        management: [
-          'Tingkatkan sirkulasi udara',
-          'Hindari penyiraman dari atas',
-          'Aplikasi fungisida',
-        ],
-      },
-      {
-        id: 'bacterial-leaf-spot',
-        name: 'Bacterial Leaf Spot',
-        scientificName: 'Xanthomonas campestris',
-        symptoms: ['Bercak kecil bertepi kuning', 'Daun menguning dan rontok'],
-        management: [
-          'Rotasi tanaman',
-          'Aplikasikan bakterisida',
-          'Hindari penyiraman dari atas',
-        ],
-      },
-      {
-        id: 'target-spot',
-        name: 'Target Spot',
-        scientificName: 'Corynespora cassiicola',
-        symptoms: [
-          'Bercak bulat dengan pola target',
-          'Muncul di daun dan batang',
-        ],
-        management: [
-          'Rotasi tanaman',
-          'Hindari kelembaban tinggi',
-          'Aplikasi fungisida',
-        ],
-      },
-    ],
-    selada: [],
-    tomat: [],
+  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
+  const [selectedDiseaseDetail, setSelectedDiseaseDetail] =
+    useState<Disease | null>(null);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDiseasesData = async () => {
+      try {
+        setIsLoadingDiseases(true);
+        const data = await diseaseApi.getDiseases();
+        setAllDiseases(data);
+      } catch (err: any) {
+        setErrorDiseases(
+          err.response?.data?.message ||
+            err.message ||
+            'Gagal memuat data penyakit'
+        );
+      } finally {
+        setIsLoadingDiseases(false);
+      }
+    };
+    fetchDiseasesData();
+  }, []);
+
+  const handleOpenDetailDialog = async (diseaseId: string) => {
+    setIsDetailDialogOpen(true);
+    setIsLoadingDetail(true);
+    setErrorDetail(null);
+    setSelectedDiseaseDetail(null);
+
+    try {
+      const data = await diseaseApi.getDiseaseById(diseaseId);
+      setSelectedDiseaseDetail(data);
+    } catch (err: any) {
+      setErrorDetail(
+        err.response?.data?.message ||
+          err.message ||
+          'Gagal memuat detail penyakit.'
+      );
+    } finally {
+      setIsLoadingDetail(false);
+    }
   };
 
-  const tips = [
-    {
-      id: 1,
-      icon: <FaSeedling className="text-green-600 text-2xl" />,
-      title: 'Pemilihan Bibit',
-      description:
-        'Gunakan bibit berkualitas dan bersertifikat untuk memastikan tanaman yang sehat dan produktif.',
-    },
-    {
-      id: 2,
-      icon: <FaLeaf className="text-green-600 text-2xl" />,
-      title: 'Lingkungan Optimal',
-      description:
-        'Jaga sirkulasi udara dan kelembaban yang sesuai untuk pertumbuhan tanaman.',
-    },
-    {
-      id: 3,
-      icon: <FaTint className="text-blue-600 text-2xl" />,
-      title: 'Penyiraman Tepat',
-      description:
-        'Siram tanaman di pagi atau sore hari untuk membantu akar dan daun menyerap air dengan optimal.',
-    },
-    {
-      id: 4,
-      icon: <FaWind className="text-gray-600 text-2xl" />,
-      title: 'Sirkulasi Udara',
-      description:
-        'Pastikan jarak tanam cukup untuk sirkulasi udara yang baik antar tanaman.',
-    },
-    {
-      id: 5,
-      icon: <FaBroom className="text-orange-600 text-2xl" />,
-      title: 'Pembersihan Rutin',
-      description:
-        'Bersihkan daun yang sakit atau tua untuk mencegah penyebaran penyakit.',
-    },
-    {
-      id: 6,
-      icon: <FaSync className="text-purple-600 text-2xl" />,
-      title: 'Rotasi Tanaman',
-      description:
-        'Lakukan rotasi tanaman untuk memutus siklus hidup patogen dalam tanah.',
-    },
-  ];
+  const getDiseasesForPlant = (plantName: PlantTab) => {
+    return allDiseases.filter(
+      (disease) => disease.tanaman.toLowerCase() === plantName.toLowerCase()
+    );
+  };
+
+  const getDiseaseImage = (diseaseLabel: string) => {
+    const formattedLabel = diseaseLabel.toLowerCase().replace(/_/g, '-');
+    return `/images/diseases/${formattedLabel}.png`;
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -175,127 +108,296 @@ const GuidancePage = () => {
               hidroponik, penyakit umum, dan cara penanganannya.
             </p>
 
-            {/* Plant Tabs */}
-            <div className="p-6">
-              <PlantTabButtonGroup
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-              />
-            </div>
-
-            {/* Plant Info */}
-            <div className="flex flex-col md:flex-row gap-6 mb-10">
-              <div className="md:w-1/3">
-                <img
-                  src="/placeholder.svg?height=300&width=400"
-                  alt="Cabai"
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-              </div>
-              <div className="md:w-2/3">
-                <h2 className="text-2xl font-bold mb-4">Cabai</h2>
-                <p className="text-gray-700 mb-4">
-                  Cabai (Capsicum annuum L.) adalah sejenis tumbuhan yang
-                  termasuk dalam genus Capsicum. Cabai dapat tumbuh dan
-                  berkembang dengan baik di daerah tropis. Karakteristik tanaman
-                  cabai memiliki batang berkayu, bercabang, dan tingginya dapat
-                  mencapai 2 meter. Cabai memiliki rasa pedas yang disebabkan
-                  oleh senyawa capsaicin. Selain sebagai bumbu masak, cabai juga
-                  memiliki banyak manfaat untuk kesehatan. Kaya Vitamin C,
-                  Vitamin A, serta sejumlah mineral seperti magnesium, zat besi,
-                  dan kalium. Cabai sangat baik untuk meningkatkan masa
-                  metabolisme tubuh.
-                </p>
-              </div>
-            </div>
-
-            {/* Disease Section */}
-            <h2 className="text-xl font-bold text-center mb-6">
-              Jenis-Jenis Penyakit Tanaman Cabai
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {diseases[activeTab].map((disease) => (
-                <div
-                  key={disease.id}
-                  className="border rounded-lg overflow-hidden bg-white shadow-sm"
+            <Tabs defaultValue="selada" className="w-full">
+              <TabsList
+                className="grid w-full grid-cols-3 p-1 rounded-full border border-gray-200"
+                style={{ backgroundColor: '#F7F7F2' }}
+              >
+                <TabsTrigger
+                  value="cabai"
+                  className="rounded-full data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors"
                 >
-                  <img
-                    src={`/placeholder.svg?height=200&width=300&text=${disease.name}`}
-                    alt={disease.name}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h3 className="font-bold text-lg mb-1">{disease.name}</h3>
-                    <p className="text-sm text-gray-500 mb-3">
-                      {disease.scientificName}
+                  Cabai
+                </TabsTrigger>
+                <TabsTrigger
+                  value="selada"
+                  className="rounded-full data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+                >
+                  Selada
+                </TabsTrigger>
+                <TabsTrigger
+                  value="tomat"
+                  className="rounded-full data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+                >
+                  Tomat
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="cabai" className="space-y-6 pt-4">
+                <div className="flex flex-col md:flex-row gap-6 mb-10">
+                  <div className="md:w-1/3">
+                    <img
+                      src={plantInfo.cabai.image}
+                      alt={plantInfo.cabai.name}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  </div>
+                  <div className="md:w-2/3">
+                    <h2 className="text-2xl font-bold mb-4">
+                      {plantInfo.cabai.name}
+                    </h2>
+                    <p className="text-gray-700 mb-4">
+                      {plantInfo.cabai.description}
                     </p>
-
-                    <div className="mb-3">
-                      <p className="font-medium text-sm mb-1">Gejala:</p>
-                      <ul className="space-y-1">
-                        {disease.symptoms.map((symptom, index) => (
-                          <li
-                            key={index}
-                            className="flex items-start gap-2 text-sm"
-                          >
-                            <FaExclamationTriangle className="text-amber-500 mt-1 flex-shrink-0" />
-                            <span>{symptom}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <p className="font-medium text-sm mb-1">
-                        Cara Penanganan:
-                      </p>
-                      <ul className="space-y-1">
-                        {disease.management.map((step, index) => (
-                          <li
-                            key={index}
-                            className="flex items-start gap-2 text-sm"
-                          >
-                            <FaRegCheckCircle className="text-green-500 mt-1 flex-shrink-0" />
-                            <span>{step}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="py-12">
-              <div className=" mx-auto">
-                <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
-                  Tips Pencegahan Umum
-                </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mx-auto">
-                  {tips.map((tip) => (
-                    <div
-                      key={tip.id}
-                      className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 mt-1">{tip.icon}</div>
-                        <div>
-                          <h3 className="font-bold text-lg text-gray-800 mb-2">
-                            {tip.title}
-                          </h3>
-                          <p className="text-gray-600 text-sm leading-relaxed">
-                            {tip.description}
-                          </p>
-                        </div>
+                <h2 className="text-xl font-bold text-center mb-6">
+                  Jenis-Jenis Penyakit Tanaman {plantInfo.cabai.name}
+                </h2>
+                {isLoadingDiseases ? (
+                  <div className="text-center text-gray-600">
+                    Memuat penyakit...
+                  </div>
+                ) : errorDiseases ? (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{errorDiseases}</AlertDescription>
+                  </Alert>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {getDiseasesForPlant('cabai').length > 0 ? (
+                      getDiseasesForPlant('cabai').map((disease) => (
+                        <PlantDiseasePreview
+                          key={disease.id}
+                          id={disease.id}
+                          name={disease.name}
+                          scientificName={disease.penyebab}
+                          symptoms={disease.deskripsi
+                            .split(/[.!?]\s*/)
+                            .filter((s) => s.trim() !== '')
+                            .slice(0, 2)}
+                          image={getDiseaseImage(disease.label)}
+                          onDetailClick={handleOpenDetailDialog}
+                        />
+                      ))
+                    ) : (
+                      <div className="text-center text-gray-600 col-span-full">
+                        Tidak ada data penyakit untuk {plantInfo.cabai.name}.
                       </div>
-                    </div>
-                  ))}
+                    )}
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="selada" className="space-y-6 pt-4">
+                <div className="flex flex-col md:flex-row gap-6 mb-10">
+                  <div className="md:w-1/3">
+                    <img
+                      src={plantInfo.selada.image}
+                      alt={plantInfo.selada.name}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  </div>
+                  <div className="md:w-2/3">
+                    <h2 className="text-2xl font-bold mb-4">
+                      {plantInfo.selada.name}
+                    </h2>
+                    <p className="text-gray-700 mb-4">
+                      {plantInfo.selada.description}
+                    </p>
+                  </div>
                 </div>
+
+                <h2 className="text-xl font-bold text-center mb-6">
+                  Jenis-Jenis Penyakit Tanaman {plantInfo.selada.name}
+                </h2>
+                {isLoadingDiseases ? (
+                  <div className="text-center text-gray-600">
+                    Memuat penyakit...
+                  </div>
+                ) : errorDiseases ? (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{errorDiseases}</AlertDescription>
+                  </Alert>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {getDiseasesForPlant('selada').length > 0 ? (
+                      getDiseasesForPlant('selada').map((disease) => (
+                        <PlantDiseasePreview
+                          key={disease.id}
+                          id={disease.id}
+                          name={disease.name}
+                          scientificName={disease.penyebab}
+                          symptoms={disease.deskripsi
+                            .split(/[.!?]\s*/)
+                            .filter((s) => s.trim() !== '')
+                            .slice(0, 2)}
+                          image={getDiseaseImage(disease.label)}
+                          onDetailClick={handleOpenDetailDialog}
+                        />
+                      ))
+                    ) : (
+                      <div className="text-center text-gray-600 col-span-full">
+                        Tidak ada data penyakit untuk {plantInfo.selada.name}.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="tomat" className="space-y-6 pt-4">
+                <div className="flex flex-col md:flex-row gap-6 mb-10">
+                  <div className="md:w-1/3">
+                    <img
+                      src={plantInfo.tomat.image}
+                      alt={plantInfo.tomat.name}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  </div>
+                  <div className="md:w-2/3">
+                    <h2 className="text-2xl font-bold mb-4">
+                      {plantInfo.tomat.name}
+                    </h2>
+                    <p className="text-gray-700 mb-4">
+                      {plantInfo.tomat.description}
+                    </p>
+                  </div>
+                </div>
+
+                <h2 className="text-xl font-bold text-center mb-6">
+                  Jenis-Jenis Penyakit Tanaman {plantInfo.tomat.name}
+                </h2>
+                {isLoadingDiseases ? (
+                  <div className="text-center text-gray-600">
+                    Memuat penyakit...
+                  </div>
+                ) : errorDiseases ? (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{errorDiseases}</AlertDescription>
+                  </Alert>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {getDiseasesForPlant('tomat').length > 0 ? (
+                      getDiseasesForPlant('tomat').map((disease) => (
+                        <PlantDiseasePreview
+                          key={disease.id}
+                          id={disease.id}
+                          name={disease.name}
+                          scientificName={disease.penyebab}
+                          symptoms={disease.deskripsi
+                            .split(/[.!?]\s*/)
+                            .filter((s) => s.trim() !== '')
+                            .slice(0, 2)}
+                          image={getDiseaseImage(disease.label)}
+                          onDetailClick={handleOpenDetailDialog}
+                        />
+                      ))
+                    ) : (
+                      <div className="text-center text-gray-600 col-span-full">
+                        Tidak ada data penyakit untuk {plantInfo.tomat.name}.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+
+            <div className="py-12">
+              <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
+                Tips Pencegahan Umum
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mx-auto">
+                {tips.map((tip) => (
+                  <PlantTipsCard
+                    key={tip.id}
+                    icon={tip.icon}
+                    title={tip.title}
+                    description={tip.description}
+                  />
+                ))}
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {isLoadingDetail
+                ? 'Memuat...'
+                : selectedDiseaseDetail?.name || 'Detail Penyakit'}
+            </DialogTitle>
+            <DialogDescription>
+              {isLoadingDetail
+                ? 'Memuat informasi detail...'
+                : selectedDiseaseDetail?.penyebab ||
+                  'Data detail tidak tersedia.'}
+            </DialogDescription>
+          </DialogHeader>
+          {isLoadingDetail ? (
+            <div className="flex justify-center items-center h-48">
+              <p>Memuat detail...</p>
+            </div>
+          ) : errorDetail ? (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{errorDetail}</AlertDescription>
+            </Alert>
+          ) : selectedDiseaseDetail ? (
+            <div className="space-y-4 py-4">
+              <div>
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Book className="h-5 w-5 text-blue-500" /> Deskripsi
+                </h3>
+                <p className="text-gray-700">
+                  {selectedDiseaseDetail.deskripsi}
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold flex items-center gap-2 mt-4">
+                  <Info className="h-5 w-5 text-purple-500" /> Penyebab
+                </h3>
+                <p className="text-gray-700">
+                  {selectedDiseaseDetail.penyebab}
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold flex items-center gap-2 mt-4">
+                  <ShieldCheck className="h-5 w-5 text-green-500" /> Pencegahan
+                </h3>
+                <ul className="list-disc list-inside text-gray-700">
+                  {selectedDiseaseDetail.pencegahan?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold flex items-center gap-2 mt-4">
+                  <ShieldCheck className="h-5 w-5 text-red-500" /> Pengendalian
+                </h3>
+                <ul className="list-disc list-inside text-gray-700">
+                  {selectedDiseaseDetail.pengendalian?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="flex justify-center items-center h-48">
+              <p>Tidak ada detail penyakit yang dipilih.</p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

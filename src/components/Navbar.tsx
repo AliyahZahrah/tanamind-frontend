@@ -61,10 +61,9 @@ const Navbar = () => {
     return (
       <Button
         asChild
-        className="hidden md:flex bg-[#345e4e] hover:bg-[#2c4f40] text-white font-medium text-sm px-4 py-1.5 rounded-md items-center"
+        className="hidden md:flex bg-[#345e4e] hover:bg-[#2c4f40] text-white font-medium text-sm px-5 rounded-md items-center"
       >
         <Link to="/login" className="flex items-center">
-          <img src="/icons/log-in.png" alt="Login" data-ai-hint="login icon" className="w-5 h-5 mr-2" />
           Login
         </Link>
       </Button>
@@ -106,8 +105,17 @@ const Navbar = () => {
         asChild
         className="bg-[#345e4e] hover:bg-[#2c4f40] text-white mx-auto font-medium text-sm px-4 py-1.5 rounded-md mt-4"
       >
-        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
-          <img src="/icons/log-in.png" alt="Login" data-ai-hint="login icon" className="w-5 h-5 mr-2" />
+        <Link
+          to="/login"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="flex items-center"
+        >
+          <img
+            src="/icons/log-in.png"
+            alt="Login"
+            data-ai-hint="login icon"
+            className="w-5 h-5 mr-2"
+          />
           Login
         </Link>
       </Button>
