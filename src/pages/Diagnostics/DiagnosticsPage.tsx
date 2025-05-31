@@ -32,6 +32,7 @@ const DiagnosticsPage = () => {
     useState<PredictionData | null>(null);
   const [isPredicting, setIsPredicting] = useState(false);
   const [predictionError, setPredictionError] = useState<string | null>(null);
+  const [apiMessage, setApiMessage] = useState<string | null>(null); // State baru
 
   const plants = [
     {
@@ -119,6 +120,7 @@ const DiagnosticsPage = () => {
     setIsPredicting(true);
     setPredictionError(null);
     setPredictionResult(null);
+    setApiMessage(null);
 
     try {
       const file = fileInputRef.current.files[0];
@@ -126,6 +128,7 @@ const DiagnosticsPage = () => {
 
       if (response.status === 200 && response.data) {
         setPredictionResult(response.data);
+        setApiMessage(response.message); // Simpan pesan dari API
         setIsResultDialogOpen(true);
       } else {
         setPredictionError(
@@ -146,7 +149,7 @@ const DiagnosticsPage = () => {
   };
 
   const handleNavigateToFullResult = () => {
-    if (predictionResult && uploadedImage) {
+    if (predictionResult && predictionResult.disease && uploadedImage) {
       const queryParams = new URLSearchParams();
       queryParams.append('diseaseId', predictionResult.disease.id);
       queryParams.append('plantType', predictionResult.tanaman);
@@ -164,6 +167,7 @@ const DiagnosticsPage = () => {
       resetForm();
       setPredictionResult(null);
       setPredictionError(null);
+      setApiMessage(null);
     }
   };
 
@@ -214,13 +218,15 @@ const DiagnosticsPage = () => {
               onEditImage={handleEditImage}
             />
 
-            {predictionError && !isResultDialogOpen && (
-              <Alert variant="destructive" className="mb-6">
-                <FaExclamationCircle className="h-4 w-4" />
-                <AlertTitle>Error Diagnosa</AlertTitle>
-                <AlertDescription>{predictionError}</AlertDescription>
-              </Alert>
-            )}
+            {predictionError &&
+              !isResultDialogOpen &&
+              (!predictionResult || predictionResult?.disease !== null) && (
+                <Alert variant="destructive" className="mb-6">
+                  <FaExclamationCircle className="h-4 w-4" />
+                  <AlertTitle>Error Diagnosa</AlertTitle>
+                  <AlertDescription>{predictionError}</AlertDescription>
+                </Alert>
+              )}
 
             <div className="text-center">
               <button
@@ -269,6 +275,7 @@ const DiagnosticsPage = () => {
         isOpen={isResultDialogOpen}
         onOpenChange={handleDialogOnOpenChange}
         predictionResult={predictionResult}
+        apiMessage={apiMessage}
         uploadedImage={uploadedImage}
         isPredicting={isPredicting}
         predictionError={predictionError}
