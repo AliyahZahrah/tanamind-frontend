@@ -6,6 +6,7 @@ import { useState, useRef } from 'react';
 import { FaStethoscope, FaUpload, FaCamera, FaSearch } from 'react-icons/fa';
 import { MdImage } from 'react-icons/md';
 import DiagnosisHistory from '../../components/DiagnosisHistory';
+import { diagnosisApi } from '../../lib/api/diagnosis';
 
 type PlantType = 'cabai' | 'tomat' | 'selada' | null;
 
@@ -33,7 +34,7 @@ const DiagnosticsPage = () => {
     },
     {
       id: 'selada' as const,
-      name: 'Selada', 
+      name: 'Selada',
       icon: '🥬',
       color: 'bg-green-100 hover:bg-green-200 border-green-300',
       selectedColor: 'bg-green-500 text-white',
@@ -68,22 +69,18 @@ const DiagnosticsPage = () => {
   };
 
   const handleTakePhoto = () => {
-    // Simulate camera capture
     setIsUploading(true);
     setUploadedFileName('camera_capture.jpg');
 
-    // Simulate camera process
     setTimeout(() => {
-      // For demo purposes, use a placeholder image
       setUploadedImage(
         '/placeholder.svg?height=300&width=400&text=Camera+Photo'
       );
       setIsUploading(false);
-    }, 1500); // Simulate 1.5 second camera capture time
+    }, 1500);
   };
 
   const handleEditImage = () => {
-    // Reset the file input and show options to re-upload or take new photo
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -92,44 +89,31 @@ const DiagnosticsPage = () => {
     setIsUploading(false);
   };
 
-  const handleStartDiagnosis = () => {
-    if (!selectedPlant) {
-      alert('Silakan pilih jenis tanaman terlebih dahulu');
-      return;
-    }
-    if (!uploadedImage) {
-      alert('Silakan unggah foto tanaman terlebih dahulu');
+  const handleStartDiagnosis = async () => {
+    if (!selectedPlant || !fileInputRef.current?.files?.[0]) {
+      alert('Pilih tanaman dan unggah foto terlebih dahulu');
       return;
     }
 
-    // TODO: Implement actual diagnosis logic
-    // This would typically send the image to an AI service for analysis
-    console.log(
-      'Starting diagnosis for:',
-      selectedPlant,
-      'with image:',
-      uploadedImage
-    );
-    alert(`Memulai diagnosa untuk tanaman ${selectedPlant}...`);
-
-    // Navigate to results page or show loading state
-    // Example: navigate('/diagnosis-results', { state: { plant: selectedPlant, image: uploadedImage } })
+    try {
+      const file = fileInputRef.current.files[0];
+      const result = await diagnosisApi.predict(selectedPlant, file);
+      console.log('Diagnosis Result:', result);
+    } catch (error: any) {
+      console.error('Prediction error:', error);
+      alert(error.message || 'Gagal melakukan diagnosa');
+    }
   };
 
   const handleViewDetail = (diagnosisId: string) => {
-    // Navigate to diagnosis detail page
     console.log('Viewing diagnosis detail:', diagnosisId);
     alert(`Menampilkan detail diagnosa ${diagnosisId}`);
-    // Example: navigate(`/diagnosis-detail/${diagnosisId}`)
   };
 
   const handleFilter = () => {
-    // Open filter modal or dropdown
     console.log('Opening filter options');
     alert('Filter options: Tanggal, Jenis Penyakit, Status');
   };
-
-  // Check if diagnosis can start
   const canStartDiagnosis = selectedPlant && uploadedImage && !isUploading;
 
   return (
@@ -150,17 +134,16 @@ const DiagnosticsPage = () => {
               awal dan saran penanganan.
             </p>
 
-            {/* Plant Selection */}
             <div className="mb-8">
               <h2 className="text-lg font-bold text-gray-800 mb-4">
                 Pilih Jenis Tanaman
               </h2>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-4 cursor-pointer">
                 {plants.map((plant) => (
                   <button
                     key={plant.id}
                     onClick={() => setSelectedPlant(plant.id)}
-                    className={`p-6 rounded-lg border-2 transition-all ${
+                    className={`p-6 rounded-lg border-2 transition-all cursor-pointer ${
                       selectedPlant === plant.id
                         ? plant.selectedColor
                         : `${plant.color} border-gray-200`
@@ -173,7 +156,6 @@ const DiagnosticsPage = () => {
               </div>
             </div>
 
-            {/* Image Upload */}
             <div className="mb-8">
               <h2 className="text-lg font-bold text-gray-800 mb-4">
                 Unggah Foto Tanaman
@@ -224,7 +206,7 @@ const DiagnosticsPage = () => {
                   // Show Edit button when image is uploaded
                   <button
                     onClick={handleEditImage}
-                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <FaUpload />
                     Edit Gambar
@@ -235,7 +217,7 @@ const DiagnosticsPage = () => {
                     <button
                       onClick={handleUploadClick}
                       disabled={isUploading}
-                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 ${
+                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 cursor-pointer ${
                         isUploading
                           ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                           : 'bg-green-700 text-white hover:bg-green-800'
@@ -247,7 +229,7 @@ const DiagnosticsPage = () => {
                     <button
                       onClick={handleTakePhoto}
                       disabled={isUploading}
-                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 ${
+                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 cursor-pointer ${
                         isUploading
                           ? 'bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300'
                           : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -274,7 +256,7 @@ const DiagnosticsPage = () => {
               <button
                 onClick={handleStartDiagnosis}
                 disabled={!canStartDiagnosis}
-                className={`py-3 px-8 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 mx-auto ${
+                className={`py-3 px-8 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 mx-auto cursor-pointer ${
                   canStartDiagnosis
                     ? 'bg-green-700 text-white hover:bg-green-800 hover:scale-105 shadow-lg'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
