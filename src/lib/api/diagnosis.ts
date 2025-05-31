@@ -1,9 +1,16 @@
+import type { DiseaseData } from './disease';
 import { apiClient } from './client';
 
-export interface DiagnosisResponse {
+export interface PredictionData {
   tanaman: string;
-  hasil: string;
   confidence: number;
+  disease: DiseaseData;
+}
+
+export interface DiagnosisApiResponse {
+  status: number;
+  data: PredictionData;
+  message: string;
 }
 
 export interface ApiError {
@@ -13,19 +20,25 @@ export interface ApiError {
 }
 
 export const diagnosisApi = {
-  predict: async (tanaman: string, file: File): Promise<DiagnosisResponse> => {
+  predict: async (
+    tanaman: string,
+    file: File
+  ): Promise<DiagnosisApiResponse> => {
     const formData = new FormData();
     formData.append('tanaman', tanaman);
     formData.append('file', file);
 
     try {
-      const response = await apiClient.post('/detection/predict', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      return response.data as DiagnosisResponse;
+      const response = await apiClient.post<DiagnosisApiResponse>(
+        '/detection/predict',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      return response.data;
     } catch (error: any) {
       if (error.response?.data) {
         throw error.response.data as ApiError;

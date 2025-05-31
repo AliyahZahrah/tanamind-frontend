@@ -1,21 +1,37 @@
 'use client';
 
 import type React from 'react';
-
 import { useState, useRef } from 'react';
-import { FaStethoscope, FaUpload, FaCamera, FaSearch } from 'react-icons/fa';
-import { MdImage } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import { FaStethoscope, FaSearch, FaExclamationCircle } from 'react-icons/fa';
+
 import DiagnosisHistory from '../../components/DiagnosisHistory';
-import { diagnosisApi } from '../../lib/api/diagnosis';
+import PlantSelector from '../../components/PlantSelectorDiagnostics';
+import ImageUploader from '../../components/ImageUploader';
+import PredictionResultDialog from '../../components/PredictionResultDialog';
+
+import {
+  diagnosisApi,
+  type PredictionData,
+  type ApiError,
+} from '../../lib/api/diagnosis';
+import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
 
 type PlantType = 'cabai' | 'tomat' | 'selada' | null;
 
 const DiagnosticsPage = () => {
+  const navigate = useNavigate();
   const [selectedPlant, setSelectedPlant] = useState<PlantType>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [isResultDialogOpen, setIsResultDialogOpen] = useState(false);
+  const [predictionResult, setPredictionResult] =
+    useState<PredictionData | null>(null);
+  const [isPredicting, setIsPredicting] = useState(false);
+  const [predictionError, setPredictionError] = useState<string | null>(null);
 
   const plants = [
     {
@@ -45,22 +61,21 @@ const DiagnosticsPage = () => {
     const file = event.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert('File size must be less than 5MB');
+        alert('Ukuran file maksimal adalah 5MB');
         return;
       }
-
       setIsUploading(true);
       setUploadedFileName(file.name);
-
-      // Simulate upload process
-      setTimeout(() => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setUploadedImage(e.target?.result as string);
-          setIsUploading(false);
-        };
-        reader.readAsDataURL(file);
-      }, 1000); // Simulate 1 second upload time
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string);
+        setIsUploading(false);
+      };
+      reader.onerror = () => {
+        setIsUploading(false);
+        alert('Gagal membaca file gambar.');
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -71,11 +86,8 @@ const DiagnosticsPage = () => {
   const handleTakePhoto = () => {
     setIsUploading(true);
     setUploadedFileName('camera_capture.jpg');
-
     setTimeout(() => {
-      setUploadedImage(
-        '/placeholder.svg?height=300&width=400&text=Camera+Photo'
-      );
+      setUploadedImage('/img/placeholder-plant.jpg');
       setIsUploading(false);
     }, 1500);
   };
@@ -95,33 +107,64 @@ const DiagnosticsPage = () => {
       return;
     }
 
+    setIsPredicting(true);
+    setPredictionError(null);
+    setPredictionResult(null);
+
     try {
       const file = fileInputRef.current.files[0];
-      const result = await diagnosisApi.predict(selectedPlant, file);
-      console.log('Diagnosis Result:', result);
+      const response = await diagnosisApi.predict(selectedPlant, file);
+
+      if (response.status === 200 && response.data) {
+        setPredictionResult(response.data);
+        setIsResultDialogOpen(true);
+      } else {
+        setPredictionError(
+          response.message || 'Gagal mendapatkan hasil diagnosa.'
+        );
+      }
     } catch (error: any) {
-      console.error('Prediction error:', error);
-      alert(error.message || 'Gagal melakukan diagnosa');
+      const apiErr = error as ApiError;
+      console.error('Prediction error:', apiErr);
+      setPredictionError(
+        apiErr.message || 'Gagal melakukan diagnosa. Silakan coba lagi.'
+      );
+    } finally {
+      setIsPredicting(false);
     }
   };
 
-  const handleViewDetail = (diagnosisId: string) => {
-    console.log('Viewing diagnosis detail:', diagnosisId);
-    alert(`Menampilkan detail diagnosa ${diagnosisId}`);
+  const handleNavigateToFullResult = () => {
+    if (predictionResult && uploadedImage) {
+      const queryParams = new URLSearchParams();
+      queryParams.append('diseaseId', predictionResult.disease.id);
+      queryParams.append('plantType', predictionResult.tanaman);
+      queryParams.append('confidence', predictionResult.confidence.toString());
+      queryParams.append('image', encodeURIComponent(uploadedImage));
+
+      navigate(`/diagnostics-result?${queryParams.toString()}`);
+      setIsResultDialogOpen(false);
+    }
   };
 
-  const handleFilter = () => {
-    console.log('Opening filter options');
+  const handleViewDetailHistory = (diagnosisId: string) => {
+    console.log('Viewing diagnosis detail from history:', diagnosisId);
+    alert(`Menampilkan detail diagnosa ${diagnosisId} dari history`);
+  };
+
+  const handleFilterHistory = () => {
+    console.log('Opening filter options for history');
     alert('Filter options: Tanggal, Jenis Penyakit, Status');
   };
-  const canStartDiagnosis = selectedPlant && uploadedImage && !isUploading;
+
+  const canStartDiagnosis =
+    selectedPlant && uploadedImage && !isUploading && !isPredicting;
 
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 bg-[#d8ede3] py-6">
         <div className="container mx-auto px-2">
-          <div className="bg-white rounded-lg shadow-sm p-8  mx-auto">
-            {/* Header */}
+          <div className="bg-white rounded-lg shadow-sm p-8 mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <h1 className="text-2xl font-bold text-gray-800">
                 Diagnosa Penyakit Tanaman
@@ -134,164 +177,83 @@ const DiagnosticsPage = () => {
               awal dan saran penanganan.
             </p>
 
-            <div className="mb-8">
-              <h2 className="text-lg font-bold text-gray-800 mb-4">
-                Pilih Jenis Tanaman
-              </h2>
-              <div className="grid grid-cols-3 gap-4 cursor-pointer">
-                {plants.map((plant) => (
-                  <button
-                    key={plant.id}
-                    onClick={() => setSelectedPlant(plant.id)}
-                    className={`p-6 rounded-lg border-2 transition-all cursor-pointer ${
-                      selectedPlant === plant.id
-                        ? plant.selectedColor
-                        : `${plant.color} border-gray-200`
-                    }`}
-                  >
-                    <div className="text-4xl mb-2">{plant.icon}</div>
-                    <div className="font-medium">{plant.name}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <PlantSelector
+              plants={plants}
+              selectedPlant={selectedPlant}
+              onSelectPlant={setSelectedPlant}
+            />
 
-            <div className="mb-8">
-              <h2 className="text-lg font-bold text-gray-800 mb-4">
-                Unggah Foto Tanaman
-              </h2>
+            <ImageUploader
+              uploadedImage={uploadedImage}
+              isUploading={isUploading}
+              uploadedFileName={uploadedFileName}
+              fileInputRef={fileInputRef}
+              onFileUpload={handleFileUpload}
+              onUploadClick={handleUploadClick}
+              onTakePhoto={handleTakePhoto}
+              onEditImage={handleEditImage}
+            />
 
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
-                {isUploading ? (
-                  <div className="space-y-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-                    <p className="text-gray-600">
-                      Mengunggah {uploadedFileName}...
-                    </p>
-                  </div>
-                ) : uploadedImage ? (
-                  <div className="space-y-4">
-                    <img
-                      src={uploadedImage || '/placeholder.svg'}
-                      alt="Uploaded plant"
-                      className="max-w-full max-h-64 mx-auto rounded-lg shadow-md"
-                    />
-                    <div className="space-y-2">
-                      <p className="text-sm text-green-600 font-medium">
-                        ✓ Gambar berhasil diunggah
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {uploadedFileName}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <MdImage className="text-6xl text-gray-400 mx-auto" />
-                    <div>
-                      <p className="text-gray-600 mb-2">
-                        Tempel atau seret gambar di sini
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        PNG, JPG, atau JPEG (MAX. 5MB)
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
+            {predictionError && !isResultDialogOpen && (
+              <Alert variant="destructive" className="mb-6">
+                <FaExclamationCircle className="h-4 w-4" />
+                <AlertTitle>Error Diagnosa</AlertTitle>
+                <AlertDescription>{predictionError}</AlertDescription>
+              </Alert>
+            )}
 
-              {/* Upload/Edit Buttons */}
-              <div className="flex gap-4 mt-6 max-w-2xl mx-auto">
-                {uploadedImage && !isUploading ? (
-                  // Show Edit button when image is uploaded
-                  <button
-                    onClick={handleEditImage}
-                    className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <FaUpload />
-                    Edit Gambar
-                  </button>
-                ) : (
-                  // Show Upload and Camera buttons when no image
-                  <>
-                    <button
-                      onClick={handleUploadClick}
-                      disabled={isUploading}
-                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 cursor-pointer ${
-                        isUploading
-                          ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                          : 'bg-green-700 text-white hover:bg-green-800'
-                      }`}
-                    >
-                      <FaUpload />
-                      {isUploading ? 'Mengunggah...' : 'Unggah Gambar'}
-                    </button>
-                    <button
-                      onClick={handleTakePhoto}
-                      disabled={isUploading}
-                      className={`flex-1 py-3 px-6 rounded-md transition-colors flex items-center justify-center gap-2 cursor-pointer ${
-                        isUploading
-                          ? 'bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300'
-                          : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      <FaCamera />
-                      {isUploading ? 'Mengambil...' : 'Ambil Gambar'}
-                    </button>
-                  </>
-                )}
-              </div>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/png,image/jpeg,image/jpg"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-            </div>
-
-            {/* Start Diagnosis Button */}
             <div className="text-center">
               <button
                 onClick={handleStartDiagnosis}
-                disabled={!canStartDiagnosis}
-                className={`py-3 px-8 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 mx-auto cursor-pointer ${
-                  canStartDiagnosis
-                    ? 'bg-green-700 text-white hover:bg-green-800 hover:scale-105 shadow-lg'
+                disabled={!canStartDiagnosis || isPredicting}
+                className={`py-3 px-8 rounded-md font-semibold text-base transition-all duration-200 flex items-center justify-center gap-2 mx-auto ${
+                  canStartDiagnosis && !isPredicting
+                    ? 'bg-green-700 text-white hover:bg-green-800 hover:scale-105 shadow-lg cursor-pointer'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
                 <FaSearch />
-                {isUploading ? 'Menunggu Upload...' : 'Mulai Diagnosa'}
+                {isPredicting
+                  ? 'Mendiagnosa...'
+                  : isUploading
+                  ? 'Menunggu Upload...'
+                  : 'Mulai Diagnosa'}
               </button>
 
-              {!selectedPlant && (
+              {!selectedPlant && !isPredicting && (
                 <p className="text-sm text-red-500 mt-2">
-                  Pilih jenis tanaman terlebih dahulu
+                  Pilih jenis tanaman terlebih dahulu.
                 </p>
               )}
-              {selectedPlant && !uploadedImage && !isUploading && (
-                <p className="text-sm text-red-500 mt-2">
-                  Unggah foto tanaman untuk memulai diagnosa
-                </p>
-              )}
-              {canStartDiagnosis && (
-                <p className="text-sm text-green-600 mt-2">
-                  Siap untuk memulai diagnosa!
-                </p>
-              )}
+              {selectedPlant &&
+                !uploadedImage &&
+                !isUploading &&
+                !isPredicting && (
+                  <p className="text-sm text-red-500 mt-2">
+                    Unggah foto tanaman untuk memulai diagnosa.
+                  </p>
+                )}
             </div>
           </div>
 
           <div className="mt-10">
             <DiagnosisHistory
-              onViewDetail={handleViewDetail}
-              onFilter={handleFilter}
+              onViewDetail={handleViewDetailHistory}
+              onFilter={handleFilterHistory}
             />
           </div>
         </div>
       </main>
+
+      <PredictionResultDialog
+        isOpen={isResultDialogOpen}
+        onOpenChange={setIsResultDialogOpen}
+        predictionResult={predictionResult}
+        uploadedImage={uploadedImage}
+        isPredicting={isPredicting}
+        predictionError={predictionError}
+        onNavigateToFullResult={handleNavigateToFullResult}
+      />
     </div>
   );
 };
