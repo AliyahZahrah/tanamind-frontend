@@ -4,19 +4,24 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 const Layout = () => {
   const location = useLocation();
-  const noNavbarRoutes = [
+  const noNavbarFooterRoutes = [
     '/login',
     '/register',
     '/forgot-password',
     '/new-password',
+    '/callback-google',
   ];
 
+  const showNavbarFooter = !noNavbarFooterRoutes.includes(location.pathname);
+
   return (
-    <>
-      {!noNavbarRoutes.includes(location.pathname) && <Navbar />}
-      <Outlet />
-      {!noNavbarRoutes.includes(location.pathname) && <Footer />}
-    </>
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      {showNavbarFooter && <Navbar />}
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+      {showNavbarFooter && <Footer />}
+    </div>
   );
 };
 
