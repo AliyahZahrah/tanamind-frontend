@@ -45,7 +45,7 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
                 <span className="font-semibold capitalize">
                   {predictionResult.tanaman}
                 </span>{' '}
-                | Keyakinan:{' '}
+                | Akurasi:{' '}
                 <span className="font-semibold">
                   {(predictionResult.confidence * 100).toFixed(1)}%
                 </span>
@@ -106,13 +106,13 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto cursor-pointer"
               >
                 Tutup
               </Button>
               <Button
                 onClick={onNavigateToFullResult}
-                className="w-full sm:w-auto bg-green-600 hover:bg-green-700"
+                className="w-full sm:w-auto bg-green-600 hover:bg-green-700 cursor-pointer"
               >
                 Lihat Detail & Solusi Lengkap
               </Button>

@@ -26,7 +26,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   return (
     <div className="mb-8">
       <h2 className="text-lg font-bold text-gray-800 mb-4">
-        2. Unggah Foto Tanaman
+        Unggah Foto Tanaman
       </h2>
       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center bg-gray-50 hover:border-green-500 transition-colors">
         {isUploading && !uploadedImage ? (
@@ -69,7 +69,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         {uploadedImage && !isUploading ? (
           <button
             onClick={onEditImage}
-            className="flex-1 bg-blue-600 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+            className="flex-1 cursor-pointer bg-blue-600 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
           >
             <FaUpload /> Ganti Gambar
           </button>
@@ -78,7 +78,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             <button
               onClick={onUploadClick}
               disabled={isUploading}
-              className={`flex-1 py-2.5 sm:py-3 px-4 sm:px-6 rounded-md transition-colors flex items-center justify-center gap-2 text-sm sm:text-base ${
+              className={`flex-1 py-2.5 sm:py-3 px-4 sm:px-6 rounded-md transition-colors flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer ${
                 isUploading
                   ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                   : 'bg-green-700 text-white hover:bg-green-800'
@@ -90,7 +90,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             <button
               onClick={onTakePhoto}
               disabled={isUploading}
-              className={`flex-1 py-2.5 sm:py-3 px-4 sm:px-6 rounded-md transition-colors flex items-center justify-center gap-2 text-sm sm:text-base ${
+              className={`flex-1 py-2.5 sm:py-3 px-4 sm:px-6 rounded-md transition-colors flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer ${
                 isUploading
                   ? 'bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300'
                   : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'

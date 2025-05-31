@@ -24,14 +24,14 @@ const PlantSelector: React.FC<PlantSelectorProps> = ({
   return (
     <div className="mb-8">
       <h2 className="text-lg font-bold text-gray-800 mb-4">
-        1. Pilih Jenis Tanaman
+        Pilih Jenis Tanaman
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {plants.map((plant) => (
           <button
             key={plant.id}
             onClick={() => onSelectPlant(plant.id)}
-            className={`p-4 sm:p-6 rounded-lg border-2 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
+            className={`p-4 sm:p-6 rounded-lg border-2 transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50 cursor-pointer ${
               selectedPlant === plant.id
                 ? `${plant.selectedColor} ring-2 ring-offset-2 ring-current`
                 : `${plant.color} border-gray-200 hover:border-gray-400`

@@ -57,6 +57,15 @@ const DiagnosticsPage = () => {
     },
   ];
 
+  const resetForm = () => {
+    setSelectedPlant(null);
+    setUploadedImage(null);
+    setUploadedFileName('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -122,6 +131,7 @@ const DiagnosticsPage = () => {
         setPredictionError(
           response.message || 'Gagal mendapatkan hasil diagnosa.'
         );
+        setPredictionResult(null);
       }
     } catch (error: any) {
       const apiErr = error as ApiError;
@@ -129,6 +139,7 @@ const DiagnosticsPage = () => {
       setPredictionError(
         apiErr.message || 'Gagal melakukan diagnosa. Silakan coba lagi.'
       );
+      setPredictionResult(null);
     } finally {
       setIsPredicting(false);
     }
@@ -144,6 +155,15 @@ const DiagnosticsPage = () => {
 
       navigate(`/diagnostics-result?${queryParams.toString()}`);
       setIsResultDialogOpen(false);
+    }
+  };
+
+  const handleDialogOnOpenChange = (isOpen: boolean) => {
+    setIsResultDialogOpen(isOpen);
+    if (!isOpen) {
+      resetForm();
+      setPredictionResult(null);
+      setPredictionError(null);
     }
   };
 
@@ -206,9 +226,9 @@ const DiagnosticsPage = () => {
               <button
                 onClick={handleStartDiagnosis}
                 disabled={!canStartDiagnosis || isPredicting}
-                className={`py-3 px-8 rounded-md font-semibold text-base transition-all duration-200 flex items-center justify-center gap-2 mx-auto ${
+                className={`py-3 px-8 rounded-md font-semibold text-base transition-all duration-200 flex items-center justify-center gap-2 mx-auto cursor-pointer ${
                   canStartDiagnosis && !isPredicting
-                    ? 'bg-green-700 text-white hover:bg-green-800 hover:scale-105 shadow-lg cursor-pointer'
+                    ? 'bg-green-700 text-white hover:bg-green-800 hover:scale-105 shadow-lg'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
@@ -247,7 +267,7 @@ const DiagnosticsPage = () => {
 
       <PredictionResultDialog
         isOpen={isResultDialogOpen}
-        onOpenChange={setIsResultDialogOpen}
+        onOpenChange={handleDialogOnOpenChange}
         predictionResult={predictionResult}
         uploadedImage={uploadedImage}
         isPredicting={isPredicting}
