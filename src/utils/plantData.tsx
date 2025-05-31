@@ -22,21 +22,21 @@ export const plantInfo: Record<PlantTab, PlantInfo> = {
     scientificName: 'Capsicum annuum L.',
     description:
       'Cabai (Capsicum annuum L.) adalah sejenis tumbuhan yang termasuk dalam genus Capsicum. Cabai dapat tumbuh dan berkembang dengan baik di daerah tropis. Karakteristik tanaman cabai memiliki batang berkayu, bercabang, dan tingginya dapat mencapai 2 meter. Cabai memiliki rasa pedas yang disebabkan oleh senyawa capsaicin. Selain sebagai bumbu masak, cabai juga memiliki banyak manfaat untuk kesehatan. Kaya Vitamin C, Vitamin A, serta sejumlah mineral seperti magnesium, zat besi, dan kalium. Cabai sangat baik untuk meningkatkan masa metabolisme tubuh.',
-    image: '/images/cabai.png',
+    image: '/img/cabai.png',
   },
   selada: {
     name: 'Selada',
     scientificName: 'Lactuca sativa',
     description:
       'Selada (Lactuca sativa) adalah sayuran hijau yang umum ditanam sebagai tanaman pangan. Selada kaya nutrisi, termasuk dalam kategori sumber serat makanan yang baik, vitamin A, vitamin K, kalsium, magnesium, dan potasium. Selada memiliki berbagai jenis, seperti selada romaine, selada iceberg, dan selada butterhead. Selada sangat populer dalam salad, sandwich, dan hidangan lainnya.',
-    image: '/images/selada.png',
+    image: '/img/selada.png',
   },
   tomat: {
     name: 'Tomat',
     scientificName: 'Solanum lycopersicum',
     description:
       'Tomat (Solanum lycopersicum) adalah tumbuhan dari keluarga Solanaceae, buahnya adalah salah satu sayuran yang paling populer di dunia. Buah tomat memiliki berbagai bentuk, ukuran, dan warna, umumnya merah saat matang. Tomat kaya akan vitamin C, vitamin K, folat, dan potasium. Likopen, antioksidan kuat, juga banyak ditemukan pada tomat. Tomat digunakan dalam berbagai hidangan, dari salad segar hingga saus dan sup.',
-    image: '/images/tomat.png',
+    image: '/img/tomat.png',
   },
 };
 
