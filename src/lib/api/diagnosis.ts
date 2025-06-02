@@ -4,7 +4,7 @@ import { apiClient } from './client';
 export interface PredictionData {
   tanaman: string;
   confidence: number;
-  disease: DiseaseData;
+  disease: DiseaseData | null;
 }
 
 export interface DiagnosisApiResponse {

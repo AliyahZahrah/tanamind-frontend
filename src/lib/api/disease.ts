@@ -4,6 +4,7 @@ export interface DiseaseData {
   id: string;
   label: string;
   name: string;
+  image: string;
   penyebab: string;
   deskripsi: string;
   pencegahan: string[];
@@ -34,6 +35,7 @@ export const diseaseApi = {
     try {
       const response = await apiClient.get<DiseasesApiResponse>('/diseases');
       if (response.data.status === 200) {
+        console.log(response);
         return response.data.data;
       } else {
         throw {

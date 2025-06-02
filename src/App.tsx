@@ -12,6 +12,7 @@ import DiagnosticsPage from './pages/Diagnostics/DiagnosticsPage';
 import { Toaster } from 'sonner';
 import AuthCallback from './pages/auth/AuthCallbackGoogle';
 import PlantingsPage from './pages/plantings/PlantingsPage';
+import ProtectedRoute from './components/ProtectedRoutes';
 
 function App() {
   return (
@@ -22,8 +23,22 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/guidance" element={<GuidancePage />} />
-          <Route path="/diagnostics" element={<DiagnosticsPage />} />
-          <Route path="/plantings" element={<PlantingsPage />} />
+          <Route
+            path="/diagnostics"
+            element={
+              <ProtectedRoute>
+                <DiagnosticsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/plantings"
+            element={
+              <ProtectedRoute>
+                <PlantingsPage />
+              </ProtectedRoute>
+            }
+          />{' '}
         </Route>
 
         <Route element={<AuthLayout />}>

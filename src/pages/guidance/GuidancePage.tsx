@@ -27,6 +27,7 @@ interface Disease {
   id: string;
   label: string;
   name: string;
+  image: string;
   penyebab: string;
   deskripsi: string;
   pencegahan: string[];
@@ -90,11 +91,6 @@ const GuidancePage: React.FC = () => {
     );
   };
 
-  const getDiseaseImage = (diseaseLabel: string) => {
-    const formattedLabel = diseaseLabel.toLowerCase().replace(/_/g, '-');
-    return `/images/diseases/${formattedLabel}.png`;
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 bg-[#d8ede3] py-6">
@@ -108,26 +104,23 @@ const GuidancePage: React.FC = () => {
               hidroponik, penyakit umum, dan cara penanganannya.
             </p>
 
-            <Tabs defaultValue="selada" className="w-full">
-              <TabsList
-                className="grid w-full grid-cols-3 p-1 rounded-full border border-gray-200"
-                style={{ backgroundColor: '#F7F7F2' }}
-              >
+            <Tabs defaultValue="cabai" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-4">
                 <TabsTrigger
                   value="cabai"
-                  className="rounded-full data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+                  className=" data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-3"
                 >
                   Cabai
                 </TabsTrigger>
                 <TabsTrigger
                   value="selada"
-                  className="rounded-full data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+                  className=" data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-3"
                 >
                   Selada
                 </TabsTrigger>
                 <TabsTrigger
                   value="tomat"
-                  className="rounded-full data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+                  className=" data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-3"
                 >
                   Tomat
                 </TabsTrigger>
@@ -178,7 +171,7 @@ const GuidancePage: React.FC = () => {
                             .split(/[.!?]\s*/)
                             .filter((s) => s.trim() !== '')
                             .slice(0, 2)}
-                          image={getDiseaseImage(disease.label)}
+                          image={disease.image}
                           onDetailClick={handleOpenDetailDialog}
                         />
                       ))
@@ -236,7 +229,7 @@ const GuidancePage: React.FC = () => {
                             .split(/[.!?]\s*/)
                             .filter((s) => s.trim() !== '')
                             .slice(0, 2)}
-                          image={getDiseaseImage(disease.label)}
+                          image={disease.image}
                           onDetailClick={handleOpenDetailDialog}
                         />
                       ))
@@ -294,7 +287,7 @@ const GuidancePage: React.FC = () => {
                             .split(/[.!?]\s*/)
                             .filter((s) => s.trim() !== '')
                             .slice(0, 2)}
-                          image={getDiseaseImage(disease.label)}
+                          image={disease.image}
                           onDetailClick={handleOpenDetailDialog}
                         />
                       ))

@@ -28,8 +28,8 @@ export function PlantDiseasePreview({
   const previewSymptoms = symptoms.slice(0, 3);
 
   return (
-    <Card className="border rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-      <img src={image} alt={name} className="w-full h-48 object-cover" />
+    <Card className="border rounded-g overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+      <img src={image} alt={name} className="w-full h-60 object-cover" />
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">{name}</CardTitle>
         <CardDescription className="text-sm text-gray-500">
