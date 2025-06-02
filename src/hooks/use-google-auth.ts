@@ -17,7 +17,7 @@ export const useGoogleAuth = () => {
         try {
           const loadingToast = toast.loading('Completing Google sign-in...');
 
-          const result = await authApi.handleOAuthCallback();
+          // const result = await authApi.handleOAuthCallback();
 
           toast.dismiss(loadingToast);
           toast.success('Login successful!');
