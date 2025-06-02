@@ -141,6 +141,7 @@ const PlantingsPage = () => {
     checklistItemId: string,
     section: 'growing' | 'done'
   ) => {
+    setSelectablePlants;
     const updatePlantChecklist = (prevPlants: ActivePlant[]) =>
       prevPlants.map((p) => {
         if (p.id === plantId) {
