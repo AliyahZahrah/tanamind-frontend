@@ -1,137 +1,180 @@
+
 const Dashboard = () => {
   return (
     <>
-      <main className="flex flex-col md:flex-row min-h-[80vh] bg-gray-100 py-8 px-4 md:px-8">
-        {/* Main Content */}
-        <section className="flex-1 md:pr-6">
-          {/* Planting Guidance Section */}
-          <div className="bg-white p-8 rounded-xl mb-8 shadow-md flex flex-col md:flex-row items-center">
-            <img
-              src="/img/planting.png"
-              alt="Planting"
-              className="w-32 h-32 md:mr-6 mb-4 md:mb-0"
-            />
-            <div>
-              <h2 className="text-3xl font-semibold mb-4">
-                Mau tanam apa hari ini?
-              </h2>
-              <p className="text-gray-700 text-lg mb-6">
-                Dapatkan panduan lengkap untuk menanam selada, tomat, atau cabai
-                hidroponik Anda. Pelajari cara merawat dan mengatasi penyakit
-                umum.
-              </p>
-              <button className="bg-green-500 text-white px-6 py-3 rounded-full text-lg font-semibold flex items-center hover:bg-green-600 transition duration-300">
-                Lihat Panduan Tanaman
-                <img
-                  src="/icons/right-arrow.png"
-                  alt="Right Arrow"
-                  className="w-8 h-8 ml-3"
-                />
-              </button>
+      <main className="flex flex-col md:flex-row md:items-stretch bg-[#E9F3ED] p-4 md:p-8 gap-6 md:gap-8">
+        {/* Main Content Section (Left) */}
+        <section className="flex-1 flex flex-col gap-6 md:gap-8">
+          {/* Card 1: Mau tanam apa hari ini? */}
+          <div className="bg-[#F7F7F2] p-6 rounded-2xl shadow-lg flex flex-col md:flex-row md:items-stretch gap-6 flex-1">
+            {/* Text Content Section Wrapper*/}
+            <div className="md:order-1 flex flex-col justify-center">
+              {/* Actual Text Content Block */}
+              <div className="w-full max-w-md flex flex-col">
+                <h2 className="text-2xl md:text-3xl font-bold text-[#323232] mb-3">
+                  Mau tanam apa hari ini?
+                </h2>
+                <p className="text-gray-600 text-sm md:text-base mb-3">
+                  Dapatkan panduan lengkap untuk menanam selada, tomat, atau cabai
+                  hidroponik Anda. Pelajari cara merawat dan mengatasi penyakit
+                  umum.
+                </p>
+                <button className="bg-[#295F4E] text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center hover:bg-[#234536] transition duration-300 text-sm md:text-base self-center mt-10">
+                  Lihat Paduan Tanaman
+                  <img
+                    src="/icons/right-arrow.png"
+                    alt="Right Arrow"
+                    data-ai-hint="arrow right"
+                    className="w-8 h-8 ml-2"
+                  />
+                </button>
+              </div>
+            </div>
+            {/* Image Section Wrapper */}
+            <div className="w-full md:w-2/5 md:order-2">
+              <img
+                src="/img/planting.png"
+                alt="Planting"
+                data-ai-hint="gardening illustration"
+                className="w-full h-full object-cover rounded-lg"
+              />
             </div>
           </div>
 
-          {/* Quick Diagnosis Section */}
-          <div className="bg-white p-8 rounded-xl shadow-md flex flex-col md:flex-row items-center">
-            <img
-              src="/img/plant-detection.png"
-              alt="Plant Detection"
-              className="w-32 h-32 md:mr-6 mb-4 md:mb-0"
-            />
-            <div>
-              <h2 className="text-3xl font-semibold mb-4">Diagnosa Cepat!</h2>
-              <p className="text-gray-700 text-lg mb-6">
-                Unggah foto tanaman Anda untuk deteksi penyakit.
-              </p>
-              <button className="bg-blue-500 text-white px-6 py-3 rounded-full text-lg font-semibold flex items-center hover:bg-blue-600 transition duration-300">
-                Mulai Diagnosa
-                <img
-                  src="/icons/detection.png"
-                  alt="Detection"
-                  className="w-8 h-8 ml-3"
-                />
-              </button>
+          {/* Card 2: Diagnosa Cepat! */}
+          <div className="bg-[#F7F7F2] p-6 rounded-2xl shadow-lg flex flex-col md:flex-row md:items-stretch gap-6 flex-1">
+            {/* Text Content Section Wrapper */}
+            <div className="md:order-1 flex flex-col justify-center">
+              {/* Actual Text Content Block */}
+              <div className="w-full max-w-md flex flex-col">
+                <h2 className="text-2xl md:text-3xl font-bold text-[#323232] mb-3">
+                  Diagnosa Cepat!
+                </h2>
+                <p className="text-gray-600 text-sm md:text-base mb-3">
+                  Unggah foto tanaman Anda untuk deteksi penyakit.
+                </p>
+                <button className="bg-[#295F4E] text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center hover:bg-[#234536] transition duration-300 text-sm md:text-base self-center mt-10">
+                  Mulai Diagnosa
+                  <img
+                    src="/icons/detection.png"
+                    alt="Detection"
+                    data-ai-hint="magnifying glass plant"
+                    className="w-8 h-8 ml-2"
+                  />
+                </button>
+              </div>
+            </div>
+            {/* Image Section Wrapper */}
+            <div className="w-full md:w-2/5 md:order-2">
+              <img
+                src="/img/plant-detection.png"
+                alt="Plant Detection"
+                data-ai-hint="plant technology"
+                className="w-full h-full object-cover rounded-lg"
+              />
             </div>
           </div>
         </section>
 
-        {/* Weather Aside */}
-        <aside className="w-full md:w-1/3 mt-8 md:mt-0 bg-green-200 p-6 rounded-xl shadow-md">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            Prediksi Cuaca
-            <img
-              src="/icons/weather.png"
-              alt="Weather icon"
-              className="ml-2 w-6 h-6"
-            />
-          </h2>
-          <p className="text-gray-700 text-lg mb-4">
-            Cuaca saat ini di Lokasi Anda
-          </p>
-
-          {/* Current Weather */}
-          <div className="bg-white p-4 rounded-lg flex flex-col items-center shadow mb-4">
-            <img
-              src="/icons/sunny.png"
-              alt="Sunny"
-              className="w-12 h-12 mb-2"
-            />
-            <p className="text-2xl font-bold text-yellow-600">30°C</p>
-            <p className="text-gray-600">Sunny</p>
-            <p className="text-gray-500 text-sm">Sekarang</p>
-          </div>
-
-          {/* Forecasts */}
-          <div className="space-y-3">
-            {/* Partly Cloudy */}
-            <div className="bg-white p-4 rounded-lg flex items-center shadow">
+        {/* Aside Content Section (Right - Weather) */}
+        <aside className="w-full md:w-1/3 lg:w-1/4 bg-[#E9F3ED]">
+          <div className="bg-[#F7F7F2] p-4 md:p-6 rounded-2xl shadow-lg h-full">
+            <h2 className="text-lg md:text-xl font-bold text-[#323232] mb-1 flex items-center">
+              Prediksi Cuaca
               <img
-                src="/icons/partly-cloudy.png"
-                alt="Partly Cloudy"
-                className="w-8 h-8 mr-3"
+                src="/icons/weather.png"
+                alt="Weather icon"
+                data-ai-hint="weather sun cloud"
+                className="ml-2 w-5 h-5 md:w-6 md:h-6"
               />
-              <div>
-                <p className="text-lg font-bold text-orange-500">28°C</p>
-                <p className="text-gray-600 text-sm">Partly Cloudy</p>
-                <p className="text-gray-500 text-xs">Besok</p>
-              </div>
-            </div>
+            </h2>
+            <p className="text-xs md:text-sm text-gray-500 mb-4">
+              Cuaca saat ini di Lokasi Anda
+            </p>
 
-            {/* Sunny */}
-            <div className="bg-white p-4 rounded-lg flex items-center shadow">
-              <img
-                src="/icons/sunny.png"
-                alt="Sunny"
-                className="w-8 h-8 mr-3"
-              />
-              <div>
-                <p className="text-lg font-bold text-yellow-600">29°C</p>
-                <p className="text-gray-600 text-sm">Sunny</p>
-                <p className="text-gray-500 text-xs">Lusa</p>
+            <div className="space-y-3">
+              {/* Weather Item 1: Partly Cloudy */}
+              <div className="bg-[#F4E5C2]/50 p-3 md:p-4 rounded-xl flex items-center shadow-sm gap-3">
+                <img
+                  src="/icons/partly-cloudy.png"
+                  alt="Partly Cloudy"
+                  data-ai-hint="sun cloud"
+                  className="w-10 h-10 md:w-12 md:h-12"
+                />
+                <div className="flex-1">
+                  <p className="text-2xl md:text-3xl font-bold text-[#323232]">
+                    28°C
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm md:text-base font-semibold text-[#323232]">
+                    Partly Cloudy
+                  </p>
+                  <p className="text-xs text-gray-500">Sekarang</p>
+                </div>
               </div>
-            </div>
 
-            {/* Cloudy */}
-            <div className="bg-white p-4 rounded-lg flex items-center shadow">
-              <img
-                src="/icons/cloudy.png"
-                alt="Cloudy"
-                className="w-8 h-8 mr-3"
-              />
-              <div>
-                <p className="text-lg font-bold text-gray-700">23°C</p>
-                <p className="text-gray-600 text-sm">Cloudy</p>
-                <p className="text-gray-500 text-xs">3 Hari Lagi</p>
+              {/* Weather Item 2: Sunny */}
+              <div className="bg-[#F4E5C2]/50 p-3 md:p-4 rounded-xl flex items-center shadow-sm gap-3">
+                <img
+                  src="/icons/sunny.png"
+                  alt="Sunny"
+                  data-ai-hint="sun"
+                  className="w-10 h-10 md:w-12 md:h-12"
+                />
+                <div className="flex-1">
+                  <p className="text-2xl md:text-3xl font-bold text-[#323232]">
+                    35°C
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm md:text-base font-semibold text-[#323232]">
+                    Sunny
+                  </p>
+                  <p className="text-xs text-gray-500">Besok</p>
+                </div>
               </div>
-            </div>
 
-            {/* Rain */}
-            <div className="bg-white p-4 rounded-lg flex items-center shadow">
-              <img src="/icons/rain.png" alt="Rain" className="w-8 h-8 mr-3" />
-              <div>
-                <p className="text-lg font-bold text-blue-500">16°C</p>
-                <p className="text-gray-600 text-sm">Rain</p>
-                <p className="text-gray-500 text-xs">4 Hari Lagi</p>
+              {/* Weather Item 3: Cloudy */}
+              <div className="bg-[#F4E5C2]/50 p-3 md:p-4 rounded-xl flex items-center shadow-sm gap-3">
+                <img
+                  src="/icons/cloudy.png"
+                  alt="Cloudy"
+                  data-ai-hint="clouds"
+                  className="w-10 h-10 md:w-12 md:h-12"
+                />
+                <div className="flex-1">
+                  <p className="text-2xl md:text-3xl font-bold text-[#323232]">
+                    23°C
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm md:text-base font-semibold text-[#323232]">
+                    Cloudy
+                  </p>
+                  <p className="text-xs text-gray-500">Lusa</p>
+                </div>
+              </div>
+
+              {/* Weather Item 4: Rain */}
+              <div className="bg-[#F4E5C2]/50 p-3 md:p-4 rounded-xl flex items-center shadow-sm gap-3">
+                <img
+                  src="/icons/rain.png"
+                  alt="Rain"
+                  data-ai-hint="cloud rain"
+                  className="w-10 h-10 md:w-12 md:h-12"
+                />
+                <div className="flex-1">
+                  <p className="text-2xl md:text-3xl font-bold text-[#323232]">
+                    16°C
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm md:text-base font-semibold text-[#323232]">
+                    Rain
+                  </p>
+                  <p className="text-xs text-gray-500">3 Hari Lagi</p>
+                </div>
               </div>
             </div>
           </div>
