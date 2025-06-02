@@ -16,7 +16,7 @@ interface PredictionResultDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   predictionResult: PredictionData | null;
-  apiMessage: string | null; // Tambahkan prop untuk pesan dari API
+  apiMessage: string | null;
   uploadedImage: string | null;
   isPredicting: boolean;
   predictionError: string | null;
@@ -64,6 +64,13 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
 
     if (predictionResult) {
       if (predictionResult.disease) {
+        const hasPencegahan =
+          predictionResult.disease.pencegahan &&
+          predictionResult.disease.pencegahan.length > 0;
+        const hasPengendalian =
+          predictionResult.disease.pengendalian &&
+          predictionResult.disease.pengendalian.length > 0;
+
         return (
           <>
             <DialogHeader className="mb-4">
@@ -75,7 +82,7 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
                 <span className="font-semibold capitalize">
                   {predictionResult.tanaman}
                 </span>{' '}
-                | Keyakinan:{' '}
+                | Kemiripan:{' '}
                 <span className="font-semibold">
                   {(predictionResult.confidence * 100).toFixed(1)}%
                 </span>
@@ -92,44 +99,63 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
               )}
               <div>
                 <h4 className="font-semibold text-gray-700 mb-1">
-                  Deskripsi Penyakit:
+                  {hasPencegahan ? 'Deskripsi Penyakit:' : 'Deskripsi Tanaman:'}
                 </h4>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  {predictionResult.disease.deskripsi}
+                  {predictionResult.disease.deskripsi ||
+                    'Tidak ada deskripsi spesifik tersedia.'}
                 </p>
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-700 mb-1">
-                  Kemungkinan Penyebab:
-                </h4>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {predictionResult.disease.penyebab}
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
+              {hasPencegahan && (
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-1">
-                    Pencegahan:
+                    Kemungkinan Penyebab:
                   </h4>
-                  <ul className="list-disc list-inside text-gray-600 space-y-0.5">
-                    {predictionResult.disease.pencegahan.map((item, index) => (
-                      <li key={`prev-${index}`}>{item}</li>
-                    ))}
-                  </ul>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {predictionResult.disease.penyebab}
+                  </p>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-1">
-                    Pengendalian:
-                  </h4>
-                  <ul className="list-disc list-inside text-gray-600 space-y-0.5">
-                    {predictionResult.disease.pengendalian.map(
-                      (item, index) => (
-                        <li key={`ctrl-${index}`}>{item}</li>
-                      )
-                    )}
-                  </ul>
+              )}
+
+              {(hasPencegahan || hasPengendalian) && (
+                <div
+                  className={`grid gap-4 text-sm ${
+                    hasPencegahan && hasPengendalian
+                      ? 'grid-cols-1 md:grid-cols-2'
+                      : 'grid-cols-1'
+                  }`}
+                >
+                  {hasPencegahan && (
+                    <div>
+                      <h4 className="font-semibold text-gray-700 mb-1">
+                        Pencegahan:
+                      </h4>
+                      <ul className="list-disc list-inside text-gray-600 space-y-0.5">
+                        {predictionResult.disease.pencegahan.map(
+                          (item, index) => (
+                            <li key={`prev-${index}`}>{item}</li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  )}
+                  {hasPengendalian && (
+                    <div>
+                      <h4 className="font-semibold text-gray-700 mb-1">
+                        {hasPencegahan ? 'Pengendalian:' : 'Perawatan:'}
+                      </h4>
+                      <ul className="list-disc list-inside text-gray-600 space-y-0.5">
+                        {predictionResult.disease.pengendalian.map(
+                          (item, index) => (
+                            <li key={`ctrl-${index}`}>{item}</li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  )}
                 </div>
-              </div>
+              )}
             </div>
 
             <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-2">
