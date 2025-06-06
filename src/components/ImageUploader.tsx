@@ -6,7 +6,7 @@ interface ImageUploaderProps {
   uploadedImage: string | null;
   isUploading: boolean;
   uploadedFileName: string;
-  fileInputRef: React.RefObject<HTMLInputElement | null>; // Diubah di sini
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onUploadClick: () => void;
   onTakePhoto: () => void;

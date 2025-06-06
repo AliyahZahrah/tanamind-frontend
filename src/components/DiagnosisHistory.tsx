@@ -55,7 +55,6 @@ const DiagnosisHistory = ({
     if (onViewDetail) {
       onViewDetail(id);
     } else {
-      // Default behavior
       console.log(`Viewing details for diagnosis: ${id}`);
       alert(`Menampilkan detail diagnosa ${id}`);
     }
@@ -65,7 +64,6 @@ const DiagnosisHistory = ({
     if (onFilter) {
       onFilter();
     } else {
-      // Default behavior
       console.log('Opening filter options');
       alert('Filter options akan ditampilkan di sini');
     }
@@ -73,7 +71,6 @@ const DiagnosisHistory = ({
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <FaSearch className="text-green-600 text-xl" />
@@ -90,16 +87,14 @@ const DiagnosisHistory = ({
         </button>
       </div>
 
-      {/* Table Header */}
       <div className="grid grid-cols-3 gap-4 pb-3 border-b border-gray-200 mb-4">
         <div className="text-sm font-medium text-gray-600">Nama Penyakit</div>
         <div className="text-sm font-medium text-gray-600 text-center">
           Tanggal & Jam
         </div>
-        <div></div> {/* Empty column for action button */}
+        <div></div>
       </div>
 
-      {/* History Items */}
       <div className="space-y-4">
         {historyData.length > 0 ? (
           historyData.map((item) => (
@@ -107,7 +102,6 @@ const DiagnosisHistory = ({
               key={item.id}
               className="grid grid-cols-3 gap-4 items-center py-3 hover:bg-gray-50 rounded-lg transition-colors"
             >
-              {/* Disease Name with Icon */}
               <div className="flex items-center gap-3">
                 <span className={`text-xl ${item.iconColor}`}>{item.icon}</span>
                 <span className="font-medium text-gray-800">
@@ -115,7 +109,6 @@ const DiagnosisHistory = ({
                 </span>
               </div>
 
-              {/* Date & Time */}
               <div className="text-gray-600 text-center">
                 <span className="text-sm">
                   {item.date}, {item.time}

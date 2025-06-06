@@ -22,6 +22,8 @@ export interface PlantingDataFromAPI {
   isDone: boolean;
   createdAt: string;
   updatedAt: string;
+  diagnosisCount: number;
+  lastDiagnosisDate: string | null;
 }
 
 export interface ActivePlant extends PlantingDataFromAPI {
@@ -31,6 +33,4 @@ export interface ActivePlant extends PlantingDataFromAPI {
   idealTemp: string;
   waterNeeds: string;
   checklist: ChecklistItem[];
-  diagnosisCount: number;
-  lastDiagnosisDate: string;
 }

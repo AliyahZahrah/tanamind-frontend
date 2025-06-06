@@ -3,7 +3,7 @@
 import { useGoogleAuth } from '../../hooks/use-google-auth';
 
 const AuthCallback = () => {
-  const {} = useGoogleAuth(); // This will automatically handle the callback
+  const {} = useGoogleAuth();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#d8ede3]">

@@ -32,7 +32,7 @@ const DiagnosticsPage = () => {
     useState<PredictionData | null>(null);
   const [isPredicting, setIsPredicting] = useState(false);
   const [predictionError, setPredictionError] = useState<string | null>(null);
-  const [apiMessage, setApiMessage] = useState<string | null>(null); // State baru
+  const [apiMessage, setApiMessage] = useState<string | null>(null);
 
   const plants = [
     {
@@ -128,7 +128,7 @@ const DiagnosticsPage = () => {
 
       if (response.status === 200 && response.data) {
         setPredictionResult(response.data);
-        setApiMessage(response.message); // Simpan pesan dari API
+        setApiMessage(response.message);
         setIsResultDialogOpen(true);
       } else {
         setPredictionError(

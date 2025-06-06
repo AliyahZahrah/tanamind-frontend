@@ -7,6 +7,8 @@ export interface PlantingData {
   isDone: boolean;
   createdAt: string;
   updatedAt: string;
+  diagnosisCount: number;
+  lastDiagnosisDate: string | null;
 }
 
 export interface ApiError {

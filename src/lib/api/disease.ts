@@ -63,7 +63,7 @@ export const diseaseApi = {
       console.log('Response dari API getDiseaseById:', response.data);
 
       if (response.data.status === 200 && response.data.data) {
-        return response.data.data; // ← langsung return
+        return response.data.data;
       } else {
         throw {
           success: false,

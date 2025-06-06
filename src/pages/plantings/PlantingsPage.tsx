@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   FaClock,
   FaThermometerHalf,
@@ -6,138 +6,88 @@ import {
   FaRegSquare,
   FaCheckSquare,
 } from 'react-icons/fa';
-
-// Define interfaces for plant data
-interface ChecklistItem {
-  id: string;
-  text: string;
-  checked: boolean;
-}
-
-interface Plant {
-  id: string;
-  name: string;
-  image: string;
-  harvestTime: string;
-  idealTemp: string;
-  waterNeeds: string;
-  buttonColor: string;
-  checklist: ChecklistItem[];
-}
-
-interface ActivePlant extends Plant {
-  status: 'growing' | 'done';
-}
-
-// Initial data based on the provided image
-const initialSelectablePlants: Plant[] = [
-  {
-    id: 'cabai',
-    name: 'Cabai',
-    image: '/img/cabai-plantings.png',
-    harvestTime: '3-4 bulan',
-    idealTemp: '25-30°C',
-    waterNeeds: 'Sedang',
-    buttonColor: 'bg-[#F05D23]',
-    checklist: [
-      { id: 'c1', text: 'Siapkan media tanam', checked: false },
-      { id: 'c2', text: 'Semai benih', checked: false },
-      { id: 'c3', text: 'Siram 2x sehari', checked: false },
-      { id: 'c4', text: 'Pemupukan minggu ke-2', checked: false },
-      { id: 'c5', text: 'Pengendalian hama', checked: false },
-    ],
-  },
-  {
-    id: 'selada',
-    name: 'Selada',
-    image: '/img/selada-plantings.png',
-    harvestTime: '1-2 bulan',
-    idealTemp: '15-20°C',
-    waterNeeds: 'Tinggi',
-    buttonColor: 'bg-[#295F4E]',
-    checklist: [
-      { id: 's1', text: 'Siapkan media tanam', checked: false },
-      { id: 's2', text: 'Semai benih', checked: false },
-      { id: 's3', text: 'Siram 1x sehari', checked: false },
-      { id: 's4', text: 'Panen setelah 30 hari', checked: false },
-    ],
-  },
-  {
-    id: 'tomat',
-    name: 'Tomat',
-    image: '/img/tomat-plantings.png',
-    harvestTime: '2-3 bulan',
-    idealTemp: '20-25°C',
-    waterNeeds: 'Sedang',
-    buttonColor: 'bg-[#F05D23]',
-    checklist: [
-      { id: 't1', text: 'Siapkan media tanam', checked: false },
-      { id: 't2', text: 'Semai benih', checked: false },
-      { id: 't3', text: 'Siram 2x sehari', checked: false },
-      { id: 't4', text: 'Pemupukan minggu ke-2', checked: false },
-    ],
-  },
-];
-
-const initialGrowingPlants: ActivePlant[] = [
-  {
-    ...initialSelectablePlants[0], // Cabai
-    status: 'growing',
-    // Keep original checklist, state will manage checked status
-  },
-  {
-    ...initialSelectablePlants[1], // Selada
-    status: 'growing',
-    checklist: [
-      // Example: Selada's specific checklist from image
-      { id: 's1g', text: 'Siapkan media tanam', checked: false },
-      { id: 's2g', text: 'Semai benih', checked: false },
-      { id: 's3g', text: 'Siram 1x sehari', checked: false },
-      { id: 's4g', text: 'Panen setelah 30 hari', checked: false },
-    ],
-  },
-];
-
-const initialDonePlants: ActivePlant[] = [
-  {
-    ...initialSelectablePlants[2], // Tomat
-    status: 'done',
-    checklist: initialSelectablePlants[2].checklist.map((item) => ({
-      ...item,
-      checked: true,
-    })),
-  },
-];
+import { useUser } from '../../hooks/use-user';
+import { plantingApi } from '../../lib/api/planting';
+import type {
+  ChecklistItem,
+  ActivePlant,
+  PlantingDataFromAPI,
+} from '../../utils/plantings';
+import { plantInfo } from '../../utils/plantData';
+import GrowingPlantCard from '../../components/GrowingPlantCard';
+import DonePlantCard from '../../components/DonePlantCard';
+import { toast } from 'sonner';
+import { Link, useNavigate } from 'react-router-dom';
 
 const PlantingsPage = () => {
-  const [selectablePlants, setSelectablePlants] = useState<Plant[]>(
-    initialSelectablePlants
-  );
-  const [growingPlants, setGrowingPlants] = useState<ActivePlant[]>(
-    initialGrowingPlants.map((p) => ({
-      ...p,
-      checklist: p.checklist.map((c) => ({ ...c })), // Deep copy checklist
-    }))
-  );
-  const [donePlants, setDonePlants] = useState<ActivePlant[]>(
-    initialDonePlants.map((p) => ({
-      ...p,
-      checklist: p.checklist.map((c) => ({ ...c })), // Deep copy checklist
-    }))
-  );
+  const { user, isAuthenticated, isLoading: isLoadingUser } = useUser();
+  const navigate = useNavigate();
 
-  const handleSelectPlant = (plant: Plant) => {
-    alert(
-      `Anda memilih ${plant.name}! Tanaman ini akan ditambahkan ke "Sedang Ditanam".`
-    );
-  };
+  const [growingPlants, setGrowingPlants] = useState<ActivePlant[]>([]);
+  const [donePlants, setDonePlants] = useState<ActivePlant[]>([]);
+  const [isLoadingPlantings, setIsLoadingPlantings] = useState(true);
+  const [errorPlantings, setErrorPlantings] = useState<string | null>(null);
+
+  const fetchUserPlantings = useCallback(async () => {
+    if (!isAuthenticated || !user?.id) {
+      setIsLoadingPlantings(false);
+      return;
+    }
+
+    setIsLoadingPlantings(true);
+    setErrorPlantings(null);
+    try {
+      const fetchedPlantings: PlantingDataFromAPI[] =
+        await plantingApi.getUserPlantings(user.id);
+
+      const transformedPlantings: ActivePlant[] = fetchedPlantings.map((p) => {
+        const localPlantData =
+          plantInfo[p.tanaman.toLowerCase() as keyof typeof plantInfo];
+        return {
+          ...p,
+          localName: localPlantData.name,
+          imageUrl: localPlantData.image,
+          harvestTime: 'N/A',
+          idealTemp: 'N/A',
+          waterNeeds: 'N/A',
+          checklist: [
+            {
+              id: '1',
+              text: `Periksa nutrisi (${p.tanaman.toLowerCase()})`,
+              checked: false,
+            },
+            {
+              id: '2',
+              text: `Cek pH air (${p.tanaman.toLowerCase()})`,
+              checked: false,
+            },
+            {
+              id: '3',
+              text: `Pangkas daun tua (${p.tanaman.toLowerCase()})`,
+              checked: false,
+            },
+          ],
+        };
+      });
+
+      setGrowingPlants(transformedPlantings.filter((p) => !p.isDone));
+      setDonePlants(transformedPlantings.filter((p) => p.isDone));
+    } catch (err: any) {
+      setErrorPlantings(err.message || 'Gagal memuat daftar penanaman.');
+    } finally {
+      setIsLoadingPlantings(false);
+    }
+  }, [isAuthenticated, user?.id]);
+
+  useEffect(() => {
+    fetchUserPlantings();
+  }, [fetchUserPlantings]);
 
   const handleToggleChecklistItem = (
     plantId: string,
     checklistItemId: string,
     section: 'growing' | 'done'
   ) => {
-    setSelectablePlants;
     const updatePlantChecklist = (prevPlants: ActivePlant[]) =>
       prevPlants.map((p) => {
         if (p.id === plantId) {
@@ -160,129 +110,139 @@ const PlantingsPage = () => {
     }
   };
 
-  const handleMarkAsDone = (plant: ActivePlant) => {
-    alert(`${plant.name} ditandai selesai!`);
+  const handleMarkAsDone = async (plant: ActivePlant) => {
+    try {
+      const loadingToast = toast.loading(
+        `Menandai ${plant.localName} selesai...`
+      );
+      await plantingApi.completePlanting(plant.id);
+      toast.dismiss(loadingToast);
+      toast.success(`${plant.localName} berhasil ditandai selesai!`);
+      fetchUserPlantings();
+    } catch (err: any) {
+      toast.error(err.message || `Gagal menandai ${plant.localName} selesai.`);
+    }
   };
 
-  const handleMarkAsNotDone = (plant: ActivePlant) => {
-    alert(`${plant.name} ditandai belum selesai!`);
+  const handleMarkAsNotDone = async (plant: ActivePlant) => {
+    toast.info(
+      `Fitur 'Tandai Belum Selesai' untuk ${plant.localName} belum diimplementasikan di backend.`
+    );
   };
+
+  const handleDetectDisease = (plantingId: string, plantType: string) => {
+    navigate(`/diagnostics?plantingId=${plantingId}&plantType=${plantType}`);
+  };
+
+  const handleViewDiagnosisHistory = (plantingId: string) => {
+    navigate(`/diagnostics/history/${plantingId}`);
+    toast.info(
+      `Mengarahkan ke riwayat diagnosa untuk penanaman ID: ${plantingId}`
+    );
+  };
+
+  if (isLoadingUser || isLoadingPlantings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-600"></div>
+        <p className="ml-4 text-lg text-gray-700">Memuat penanaman Anda...</p>
+      </div>
+    );
+  }
+
+  if (errorPlantings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+          <h2 className="text-xl font-semibold text-red-600 mb-4">Error</h2>
+          <p className="text-gray-700">{errorPlantings}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Akses Dibutuhkan
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Anda harus login untuk melihat daftar penanaman.
+          </p>
+          <button
+            onClick={() => navigate('/login')}
+            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
+          >
+            Login Sekarang
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#E9F3ED] py-8 px-4 md:px-8">
-      {/* Section 2: Sedang Ditanam */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold text-[#323232] mb-6">
           Sedang Ditanam
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {growingPlants.map((plant) => (
-            <div
-              key={plant.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 flex flex-col sm:flex-row gap-4 items-center"
-            >
-              <div className="w-full sm:w-1/3 flex-shrink-0">
-                <img
-                  src={plant.image}
-                  alt={plant.name}
-                  className="w-full h-32 object-cover rounded-md"
-                />
-              </div>
-              <div className="flex-1 w-full sm:w-2/3">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
-                  <h3 className="text-xl font-bold text-[#323232] flex-grow text-left">
-                    {plant.name}
-                  </h3>
-                  <button
-                    onClick={() => handleMarkAsDone(plant)}
-                    className="bg-[#295F4E] text-white text-sm font-semibold py-1.5 px-3 rounded-md transition-transform hover:scale-105 whitespace-nowrap mt-2 sm:mt-0"
-                  >
-                    Tandai Selesai
-                  </button>
-                </div>
-                <h4 className="text-md font-semibold text-[#323232] mb-2 text-left">
-                  Checklist Perawatan:
-                </h4>
-                <ul className="space-y-2 text-sm text-[#323232] text-left">
-                  {plant.checklist.map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex items-center cursor-pointer"
-                      onClick={() =>
-                        handleToggleChecklistItem(plant.id, item.id, 'growing')
-                      }
-                    >
-                      {item.checked ? (
-                        <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />
-                      ) : (
-                        <FaRegSquare className="mr-2 text-gray-400 text-lg" />
-                      )}
-                      {item.text}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
+        {growingPlants.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {growingPlants.map((plant) => (
+              <GrowingPlantCard
+                key={plant.id}
+                plant={plant}
+                onToggleChecklistItem={handleToggleChecklistItem}
+                onMarkAsDone={handleMarkAsDone}
+                onDetectDisease={handleDetectDisease}
+                onViewDiagnosisHistory={handleViewDiagnosisHistory}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-600">
+            <p className="text-lg font-semibold">
+              Tidak ada tanaman yang sedang ditanam.
+            </p>
+            <p className="text-sm mt-2">
+              Mulai menanam di halaman{' '}
+              <Link to="/guidance" className="text-green-700 underline">
+                Panduan
+              </Link>
+              !
+            </p>
+          </div>
+        )}
       </section>
 
-      {/* Section 3: Selesai Ditanam */}
       <section>
         <h2 className="text-2xl font-bold text-[#323232] mb-6">
           Selesai Ditanam
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {donePlants.map((plant) => (
-            <div
-              key={plant.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6"
-            >
-              <div className="relative mb-4">
-                <img
-                  src={plant.image}
-                  alt={plant.name}
-                  className="w-full h-48 object-cover rounded-md"
-                />
-                <div className="absolute top-2 right-2 bg-green-500 p-2 rounded-full">
-                  <img
-                    src="/icons/check.png"
-                    alt="Selesai"
-                    className="w-4 h-4"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <h3 className="text-xl font-bold text-[#323232]">
-                  {plant.name}
-                </h3>
-                <button
-                  onClick={() => handleMarkAsNotDone(plant)}
-                  className="bg-[#F05D23] text-white text-sm font-semibold py-2 px-3 rounded-md transition-transform hover:scale-105"
-                >
-                  Tandai Belum
-                </button>
-              </div>
-              <h4 className="text-md font-semibold text-[#323232] mb-2">
-                Checklist Perawatan:
-              </h4>
-              <ul className="space-y-2 text-sm text-[#323232]">
-                {plant.checklist.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center cursor-pointer"
-                    onClick={() =>
-                      handleToggleChecklistItem(plant.id, item.id, 'done')
-                    }
-                  >
-                    <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+        {donePlants.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {donePlants.map((plant) => (
+              <DonePlantCard
+                key={plant.id}
+                plant={plant}
+                onToggleChecklistItem={handleToggleChecklistItem}
+                onMarkAsNotDone={handleMarkAsNotDone}
+                onViewDiagnosisHistory={handleViewDiagnosisHistory}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-600">
+            <p className="text-lg font-semibold">
+              Tidak ada tanaman yang sudah selesai ditanam.
+            </p>
+            <p className="text-sm mt-2">
+              Selesaikan penanaman Anda untuk melihatnya di sini.
+            </p>
+          </div>
+        )}
       </section>
     </div>
   );

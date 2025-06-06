@@ -18,9 +18,7 @@ export const useAuth = () => {
       const response = await authApi.register(data);
 
       if (response.success) {
-        // Registration successful, redirect to dashboard or plant guide
         navigate('/login');
-        // Trigger storage event to update navbar
         window.dispatchEvent(new Event('storage'));
         return response;
       }
@@ -41,9 +39,7 @@ export const useAuth = () => {
       const response = await authApi.login(data);
 
       if (response.success) {
-        // Login successful, redirect to dashboard
         navigate('/');
-        // Trigger storage event to update navbar
         window.dispatchEvent(new Event('storage'));
         return response;
       }
@@ -66,12 +62,9 @@ export const useAuth = () => {
       await authApi.logout();
     } catch (err) {
       console.error('Logout error:', err);
-      // Even if logout fails on server, clear local data
     } finally {
-      // Clear local storage
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user_data');
-      // Trigger storage event to update navbar
       window.dispatchEvent(new Event('storage'));
       navigate('/login');
       setIsLoading(false);

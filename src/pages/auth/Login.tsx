@@ -45,14 +45,12 @@ const Login = () => {
       clearError();
       await login(values);
 
-      // Show success message
       toast.success('Login successful! Welcome back to Tanamind.');
 
       setTimeout(() => {
         navigate('/');
       }, 1000);
     } catch (error: any) {
-      // Handle field-specific errors if API returns them
       if (error.errors) {
         Object.entries(error.errors).forEach(([field, messages]) => {
           if (Array.isArray(messages) && messages.length > 0) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '../../components/ui/button'; // Sesuaikan path jika perlu
+import { Button } from '../../components/ui/button';
 import { FaSignInAlt, FaExclamationTriangle } from 'react-icons/fa';
 
 const AuthRequiredPage: React.FC = () => {

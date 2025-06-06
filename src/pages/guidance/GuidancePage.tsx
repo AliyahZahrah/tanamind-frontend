@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
 import { Book, Info, ShieldCheck, AlertCircle } from 'lucide-react';
-
 import {
   Tabs,
   TabsContent,
@@ -16,12 +14,14 @@ import {
   DialogTitle,
   DialogDescription,
 } from '../../components/ui/dialog';
-
+import { Button } from '../../components/ui/button';
 import { PlantDiseasePreview } from '../../components/PlantDiseaseCard';
-import { PlantTipsCard } from '../../components/PlantTipsCard'; // Pastikan ini adalah nama yang benar
-
+import { PlantTipsCard } from '../../components/PlantTipsCard';
 import { diseaseApi } from '../../lib/api/disease';
 import { plantInfo, tips, type PlantTab } from '../../utils/plantData';
+import { useUser } from '../../hooks/use-user';
+import { plantingApi } from '../../lib/api/planting';
+import { toast } from 'sonner';
 
 interface Disease {
   id: string;
@@ -36,6 +36,7 @@ interface Disease {
 }
 
 const GuidancePage: React.FC = () => {
+  const { user, isAuthenticated, isLoading: isLoadingUser } = useUser();
   const [allDiseases, setAllDiseases] = useState<Disease[]>([]);
   const [isLoadingDiseases, setIsLoadingDiseases] = useState(true);
   const [errorDiseases, setErrorDiseases] = useState<string | null>(null);
@@ -85,6 +86,28 @@ const GuidancePage: React.FC = () => {
     }
   };
 
+  const handleStartPlanting = async (
+    plantType: 'TOMAT' | 'CABAI' | 'SELADA'
+  ) => {
+    if (!isAuthenticated || !user?.id) {
+      toast.error('Anda harus login untuk memulai penanaman.');
+      return;
+    }
+
+    try {
+      const loadingToast = toast.loading(
+        `Memulai penanaman ${plantType.toLowerCase()}...`
+      );
+      await plantingApi.startPlanting(user.id, plantType);
+      toast.dismiss(loadingToast);
+      toast.success(`Berhasil memulai penanaman ${plantType.toLowerCase()}!`);
+    } catch (err: any) {
+      const errorMessage =
+        err.message || `Gagal memulai penanaman ${plantType.toLowerCase()}.`;
+      toast.error(errorMessage);
+    }
+  };
+
   const getDiseasesForPlant = (plantName: PlantTab) => {
     return allDiseases.filter(
       (disease) => disease.tanaman.toLowerCase() === plantName.toLowerCase()
@@ -126,6 +149,7 @@ const GuidancePage: React.FC = () => {
                 </TabsTrigger>
               </TabsList>
 
+              {/* Cabai Tab Content */}
               <TabsContent value="cabai" className="space-y-6 pt-4">
                 <div className="flex flex-col md:flex-row gap-6 mb-10">
                   <div className="md:w-1/3">
@@ -142,6 +166,13 @@ const GuidancePage: React.FC = () => {
                     <p className="text-gray-700 mb-4">
                       {plantInfo.cabai.description}
                     </p>
+                    <Button
+                      onClick={() => handleStartPlanting('CABAI')}
+                      className="bg-green-700 text-white hover:bg-green-800"
+                      disabled={isLoadingUser}
+                    >
+                      Mulai Tanam Cabai
+                    </Button>
                   </div>
                 </div>
 
@@ -184,6 +215,7 @@ const GuidancePage: React.FC = () => {
                 )}
               </TabsContent>
 
+              {/* Selada Tab Content */}
               <TabsContent value="selada" className="space-y-6 pt-4">
                 <div className="flex flex-col md:flex-row gap-6 mb-10">
                   <div className="md:w-1/3">
@@ -200,6 +232,13 @@ const GuidancePage: React.FC = () => {
                     <p className="text-gray-700 mb-4">
                       {plantInfo.selada.description}
                     </p>
+                    <Button
+                      onClick={() => handleStartPlanting('SELADA')}
+                      className="bg-green-700 text-white hover:bg-green-800"
+                      disabled={isLoadingUser}
+                    >
+                      Mulai Tanam Selada
+                    </Button>
                   </div>
                 </div>
 
@@ -242,6 +281,7 @@ const GuidancePage: React.FC = () => {
                 )}
               </TabsContent>
 
+              {/* Tomat Tab Content */}
               <TabsContent value="tomat" className="space-y-6 pt-4">
                 <div className="flex flex-col md:flex-row gap-6 mb-10">
                   <div className="md:w-1/3">
@@ -258,6 +298,13 @@ const GuidancePage: React.FC = () => {
                     <p className="text-gray-700 mb-4">
                       {plantInfo.tomat.description}
                     </p>
+                    <Button
+                      onClick={() => handleStartPlanting('TOMAT')}
+                      className="bg-green-700 text-white hover:bg-green-800"
+                      disabled={isLoadingUser}
+                    >
+                      Mulai Tanam Tomat
+                    </Button>
                   </div>
                 </div>
 

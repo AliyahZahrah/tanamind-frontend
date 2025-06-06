@@ -44,7 +44,7 @@ export const authApi = {
         success: response.data.status === 200,
         message: response.data.message,
         data: {
-          token: response.data.data.token, // tetap kirimkan token kalau kamu butuh validasi manual
+          token: response.data.data.token,
           user: {
             id: response.data.data.userId,
             email: response.data.data.email,
@@ -64,14 +64,12 @@ export const authApi = {
     }
   },
 
-  // Login user
   login: async (data: LoginFormData): Promise<AuthResponse> => {
     try {
       const response = await apiClient.post('/auth/login', data);
       const resData = response.data;
 
       if (resData.status === 200 && resData.data.token) {
-        // Simpan token dan user data
         localStorage.setItem('auth_token', resData.data.token);
         localStorage.setItem(
           'user_data',
@@ -91,7 +89,7 @@ export const authApi = {
               id: resData.data.userId,
               email: resData.data.email,
               name: resData.data.name,
-              createdAt: '', // ← tidak tersedia
+              createdAt: '',
             },
           },
         };
@@ -139,10 +137,9 @@ export const authApi = {
           id: decoded.userId || '',
           email: decoded.email,
           name: decoded.name || '',
-          createdAt: '', // tidak tersedia
+          createdAt: '',
         };
 
-        // Simpan token dan user data di localStorage
         localStorage.setItem('auth_token', token);
         localStorage.setItem('user_data', JSON.stringify(user));
 
