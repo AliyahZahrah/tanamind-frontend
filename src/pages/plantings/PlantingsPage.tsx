@@ -1,18 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import {
-  FaClock,
-  FaThermometerHalf,
-  FaTint,
-  FaRegSquare,
-  FaCheckSquare,
-} from 'react-icons/fa';
 import { useUser } from '../../hooks/use-user';
 import { plantingApi } from '../../lib/api/planting';
-import type {
-  ChecklistItem,
-  ActivePlant,
-  PlantingDataFromAPI,
-} from '../../utils/plantings';
+import type { ActivePlant, PlantingDataFromAPI } from '../../utils/plantings';
 import { plantInfo } from '../../utils/plantData';
 import GrowingPlantCard from '../../components/GrowingPlantCard';
 import DonePlantCard from '../../components/DonePlantCard';

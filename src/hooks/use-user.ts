@@ -14,7 +14,6 @@ export const useUser = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on component mount
     const checkAuthStatus = () => {
       try {
         const token = localStorage.getItem('auth_token');
@@ -26,7 +25,6 @@ export const useUser = () => {
         }
       } catch (error) {
         console.error('Error parsing user data:', error);
-        // Clear invalid data
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_data');
       } finally {
@@ -36,7 +34,6 @@ export const useUser = () => {
 
     checkAuthStatus();
 
-    // Listen for storage changes (login/logout in other tabs)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'user_data' || e.key === 'auth_token') {
         checkAuthStatus();

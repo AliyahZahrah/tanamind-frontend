@@ -157,14 +157,12 @@ export const authApi = {
     });
   },
 
-  // Logout user
   logout: async (): Promise<void> => {
     try {
       await apiClient.post('/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Always clear local storage
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user_data');
     }
