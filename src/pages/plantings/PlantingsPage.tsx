@@ -113,12 +113,6 @@ const PlantingsPage = () => {
     }
   };
 
-  const handleMarkAsNotDone = async (plant: ActivePlant) => {
-    toast.info(
-      `Fitur 'Tandai Belum Selesai' untuk ${plant.localName} belum diimplementasikan di backend.`
-    );
-  };
-
   const handleDetectDisease = (plantingId: string, plantType: string) => {
     navigate(`/diagnostics?plantingId=${plantingId}&plantType=${plantType}`);
   };
@@ -217,7 +211,6 @@ const PlantingsPage = () => {
                 key={plant.id}
                 plant={plant}
                 onToggleChecklistItem={handleToggleChecklistItem}
-                onMarkAsNotDone={handleMarkAsNotDone}
                 onViewDiagnosisHistory={handleViewDiagnosisHistory}
               />
             ))}

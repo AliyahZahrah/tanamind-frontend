@@ -1,71 +1,84 @@
-'use client';
+import React, { useState } from 'react';
+import { FaSearch, FaEye } from 'react-icons/fa';
+import type { SavedDiagnosisData } from '../lib/api/diagnosis';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+import PredictionResultDialog from './PredictionResultDialog';
+import { Button } from './ui/button';
 
-import { FaSearch, FaFilter, FaEye } from 'react-icons/fa';
-
-interface DiagnosisHistoryItem {
-  id: string;
-  diseaseName: string;
-  icon: string;
-  iconColor: string;
-  date: string;
-  time: string;
-  status: 'disease' | 'healthy';
+interface DiagnosisHistoryItemProps {
+  data: SavedDiagnosisData;
+  onViewDetail: (data: SavedDiagnosisData) => void;
 }
+
+const DiagnosisHistoryItem: React.FC<DiagnosisHistoryItemProps> = ({
+  data,
+  onViewDetail,
+}) => {
+  const diagnosisDate = new Date(data.createdAt);
+  const formattedDate = format(diagnosisDate, 'd MMMM yyyy', { locale: id });
+  const formattedTime = format(diagnosisDate, 'HH:mm');
+
+  return (
+    <div
+      key={data.id}
+      className="grid grid-cols-[1fr_1.5fr_1fr_0.8fr] gap-4 items-center py-3 hover:bg-gray-50 rounded-lg transition-colors"
+    >
+      <div className="flex items-center gap-3">
+        <span className="font-medium text-gray-800 capitalize">
+          {data.tanaman.toLowerCase()}
+        </span>
+      </div>
+
+      <div className="text-gray-800">
+        <span className="font-medium">{data.disease?.name || 'Healthy'}</span>
+      </div>
+
+      <div className="text-gray-600 text-center">
+        <span className="text-sm">
+          {formattedDate}, {formattedTime}
+        </span>
+      </div>
+
+      <div className="flex justify-end">
+        <Button
+          onClick={() => onViewDetail(data)}
+          className="flex items-center gap-2 bg-green-700 text-white px-3 py-1.5 rounded-md hover:bg-green-800 transition-colors text-sm cursor-pointer"
+        >
+          <FaEye className="text-xs" />
+          Detail
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 interface DiagnosisHistoryProps {
+  historyData: SavedDiagnosisData[];
+  isLoading: boolean;
+  error: string | null;
   onViewDetail?: (id: string) => void;
-  onFilter?: () => void;
 }
 
-const DiagnosisHistory = ({
+const DiagnosisHistory: React.FC<DiagnosisHistoryProps> = ({
+  historyData,
+  isLoading,
+  error,
   onViewDetail,
-  onFilter,
-}: DiagnosisHistoryProps) => {
-  const historyData: DiagnosisHistoryItem[] = [
-    {
-      id: '1',
-      diseaseName: 'Leaf Mold',
-      icon: '🍄',
-      iconColor: 'text-orange-500',
-      date: '14 Mei 2025',
-      time: '08:17',
-      status: 'disease',
-    },
-    {
-      id: '2',
-      diseaseName: 'Early Blight',
-      icon: '🌿',
-      iconColor: 'text-green-500',
-      date: '10 Mei 2025',
-      time: '14:05',
-      status: 'disease',
-    },
-    {
-      id: '3',
-      diseaseName: 'Healthy',
-      icon: '✅',
-      iconColor: 'text-blue-500',
-      date: '5 Mei 2025',
-      time: '09:30',
-      status: 'healthy',
-    },
-  ];
+}) => {
+  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
+  const [selectedHistoryItem, setSelectedHistoryItem] =
+    useState<SavedDiagnosisData | null>(null);
 
-  const handleViewDetail = (id: string) => {
-    if (onViewDetail) {
-      onViewDetail(id);
-    } else {
-      console.log(`Viewing details for diagnosis: ${id}`);
-      alert(`Menampilkan detail diagnosa ${id}`);
-    }
+  const handleViewDetailClick = (data: SavedDiagnosisData) => {
+    setSelectedHistoryItem(data);
+    setIsDetailDialogOpen(true);
   };
 
-  const handleFilter = () => {
-    if (onFilter) {
-      onFilter();
-    } else {
-      console.log('Opening filter options');
-      alert('Filter options akan ditampilkan di sini');
+  const handleDialogOnOpenChange = (isOpen: boolean) => {
+    setIsDetailDialogOpen(isOpen);
+    if (!isOpen) {
+      setSelectedHistoryItem(null);
     }
   };
 
@@ -78,16 +91,10 @@ const DiagnosisHistory = ({
             History Output Hasil Diagnosa Tanaman
           </h2>
         </div>
-        <button
-          onClick={handleFilter}
-          className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-        >
-          <FaFilter className="text-gray-500 text-sm" />
-          <span className="text-gray-700 text-sm">Filter</span>
-        </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 pb-3 border-b border-gray-200 mb-4">
+      <div className="grid grid-cols-[1fr_1.5fr_1fr_0.8fr] gap-4 pb-3 border-b border-gray-200 mb-4">
+        <div className="text-sm font-medium text-gray-600">Jenis Tanaman</div>
         <div className="text-sm font-medium text-gray-600">Nama Penyakit</div>
         <div className="text-sm font-medium text-gray-600 text-center">
           Tanggal & Jam
@@ -96,36 +103,19 @@ const DiagnosisHistory = ({
       </div>
 
       <div className="space-y-4">
-        {historyData.length > 0 ? (
+        {isLoading ? (
+          <div className="text-center py-8 text-gray-500">
+            Memuat riwayat diagnosa...
+          </div>
+        ) : error ? (
+          <div className="text-center py-8 text-red-500">Error: {error}</div>
+        ) : historyData.length > 0 ? (
           historyData.map((item) => (
-            <div
+            <DiagnosisHistoryItem
               key={item.id}
-              className="grid grid-cols-3 gap-4 items-center py-3 hover:bg-gray-50 rounded-lg transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <span className={`text-xl ${item.iconColor}`}>{item.icon}</span>
-                <span className="font-medium text-gray-800">
-                  {item.diseaseName}
-                </span>
-              </div>
-
-              <div className="text-gray-600 text-center">
-                <span className="text-sm">
-                  {item.date}, {item.time}
-                </span>
-              </div>
-
-              {/* Action Button */}
-              <div className="flex justify-end">
-                <button
-                  onClick={() => handleViewDetail(item.id)}
-                  className="flex items-center gap-2 bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition-colors text-sm"
-                >
-                  <FaEye className="text-xs" />
-                  View Detail
-                </button>
-              </div>
-            </div>
+              data={item}
+              onViewDetail={handleViewDetailClick}
+            />
           ))
         ) : (
           <div className="text-center py-8 text-gray-500">
@@ -138,13 +128,57 @@ const DiagnosisHistory = ({
         )}
       </div>
 
-      {/* Show More Button (if needed) */}
-      {historyData.length > 0 && (
+      {historyData.length > 5 && (
         <div className="text-center mt-6">
           <button className="text-green-600 hover:text-green-700 text-sm font-medium">
             Lihat Semua Riwayat
           </button>
         </div>
+      )}
+
+      {selectedHistoryItem && (
+        <PredictionResultDialog
+          isOpen={isDetailDialogOpen}
+          onOpenChange={handleDialogOnOpenChange}
+          predictionResult={{
+            tanaman: selectedHistoryItem.tanaman,
+            confidence: selectedHistoryItem.confidence,
+            disease: selectedHistoryItem.disease
+              ? {
+                  id: selectedHistoryItem.diseaseId,
+                  label: selectedHistoryItem.disease.label,
+                  name: selectedHistoryItem.disease.name,
+                  image: selectedHistoryItem.imageUrl || '',
+                  penyebab:
+                    selectedHistoryItem.disease.penyebab ||
+                    'Data penyebab tidak tersedia di riwayat ini',
+                  deskripsi:
+                    selectedHistoryItem.disease.deskripsi ||
+                    'Data deskripsi tidak tersedia di riwayat ini',
+                  pencegahan:
+                    selectedHistoryItem.disease.pencegahan?.length > 0
+                      ? selectedHistoryItem.disease.pencegahan
+                      : ['Data pencegahan tidak tersedia di riwayat ini'],
+                  pengendalian:
+                    selectedHistoryItem.disease.pengendalian?.length > 0
+                      ? selectedHistoryItem.disease.pengendalian
+                      : ['Data pengendalian tidak tersedia di riwayat ini'],
+                  tanaman: selectedHistoryItem.tanaman,
+                }
+              : null,
+          }}
+          apiMessage="Hasil diagnosa dari riwayat."
+          uploadedImage={selectedHistoryItem.imageUrl}
+          isPredicting={false}
+          predictionError={null}
+          onNavigateToFullResult={() =>
+            onViewDetail && onViewDetail(selectedHistoryItem.id)
+          }
+          onSaveDiagnosis={() => {}}
+          isSaving={false}
+          showCloseButton={true}
+          isViewMode={true}
+        />
       )}
     </div>
   );

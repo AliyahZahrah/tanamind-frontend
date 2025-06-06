@@ -9,7 +9,7 @@ import {
 } from '../components/ui/dialog';
 import { Button } from '../components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert';
-import { FaExclamationCircle, FaInfoCircle } from 'react-icons/fa';
+import { FaExclamationCircle, FaInfoCircle, FaSave } from 'react-icons/fa';
 import type { PredictionData } from '../lib/api/diagnosis';
 
 interface PredictionResultDialogProps {
@@ -21,6 +21,10 @@ interface PredictionResultDialogProps {
   isPredicting: boolean;
   predictionError: string | null;
   onNavigateToFullResult: () => void;
+  onSaveDiagnosis: () => void;
+  isSaving: boolean;
+  showCloseButton?: boolean;
+  isViewMode?: boolean;
 }
 
 const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
@@ -32,6 +36,10 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
   isPredicting,
   predictionError,
   onNavigateToFullResult,
+  onSaveDiagnosis,
+  isSaving,
+  showCloseButton = true,
+  isViewMode = false,
 }) => {
   const renderContent = () => {
     if (isPredicting && !predictionResult && !predictionError) {
@@ -53,7 +61,7 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="w-full"
+              className="w-full cursor-pointer"
             >
               Tutup
             </Button>
@@ -66,10 +74,22 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
       if (predictionResult.disease) {
         const hasPencegahan =
           predictionResult.disease.pencegahan &&
-          predictionResult.disease.pencegahan.length > 0;
+          predictionResult.disease.pencegahan.length > 0 &&
+          predictionResult.disease.pencegahan[0] !==
+            'Data pencegahan tidak tersedia di riwayat ini';
         const hasPengendalian =
           predictionResult.disease.pengendalian &&
-          predictionResult.disease.pengendalian.length > 0;
+          predictionResult.disease.pengendalian.length > 0 &&
+          predictionResult.disease.pengendalian[0] !==
+            'Data pengendalian tidak tersedia di riwayat ini';
+        const hasDeskripsi =
+          predictionResult.disease.deskripsi &&
+          predictionResult.disease.deskripsi !==
+            'Data deskripsi tidak tersedia di riwayat ini';
+        const hasPenyebab =
+          predictionResult.disease.penyebab &&
+          predictionResult.disease.penyebab !==
+            'Data penyebab tidak tersedia di riwayat ini';
 
         return (
           <>
@@ -99,7 +119,7 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
               )}
               <div>
                 <h4 className="font-semibold text-gray-700 mb-1">
-                  {hasPencegahan ? 'Deskripsi Penyakit:' : 'Deskripsi Tanaman:'}
+                  {hasDeskripsi ? 'Deskripsi Penyakit:' : 'Deskripsi Tanaman:'}
                 </h4>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   {predictionResult.disease.deskripsi ||
@@ -107,7 +127,7 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
                 </p>
               </div>
 
-              {hasPencegahan && (
+              {hasPenyebab && (
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-1">
                     Kemungkinan Penyebab:
@@ -162,16 +182,28 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto cursor-pointer"
               >
                 Tutup
               </Button>
-              <Button
-                onClick={onNavigateToFullResult}
-                className="w-full sm:w-auto bg-green-600 hover:bg-green-700"
-              >
-                Lihat Detail & Solusi Lengkap
-              </Button>
+              {!isViewMode && predictionResult.disease.name !== 'Healthy' && (
+                <Button
+                  onClick={onSaveDiagnosis}
+                  className="w-full sm:w-auto bg-green-700 hover:bg-green-800"
+                  disabled={isSaving}
+                >
+                  <FaSave className="mr-2" />
+                  {isSaving ? 'Menyimpan...' : 'Simpan Diagnosa'}
+                </Button>
+              )}
+              {!isViewMode && (
+                <Button
+                  onClick={onNavigateToFullResult}
+                  className="w-full sm:w-auto bg-green-600 hover:bg-green-700"
+                >
+                  Lihat Detail & Solusi Lengkap
+                </Button>
+              )}
             </DialogFooter>
           </>
         );
@@ -211,10 +243,20 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="w-full"
+                className="w-full cursor-pointer"
               >
                 Tutup
               </Button>
+              {!isViewMode && (
+                <Button
+                  onClick={onSaveDiagnosis}
+                  className="w-full sm:w-auto bg-green-700 hover:bg-green-800"
+                  disabled={isSaving}
+                >
+                  <FaSave className="mr-2" />
+                  {isSaving ? 'Menyimpan...' : 'Simpan Diagnosa'}
+                </Button>
+              )}
             </DialogFooter>
           </>
         );

@@ -9,14 +9,12 @@ interface DonePlantCardProps {
     checklistItemId: string,
     section: 'growing' | 'done'
   ) => void;
-  onMarkAsNotDone: (plant: ActivePlant) => void;
   onViewDiagnosisHistory: (plantId: string) => void;
 }
 
 const DonePlantCard: React.FC<DonePlantCardProps> = ({
   plant,
   onToggleChecklistItem,
-  onMarkAsNotDone,
   onViewDiagnosisHistory,
 }) => {
   return (
@@ -36,12 +34,6 @@ const DonePlantCard: React.FC<DonePlantCardProps> = ({
       </div>
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-xl font-bold text-[#323232]">{plant.localName}</h3>
-        <button
-          onClick={() => onMarkAsNotDone(plant)}
-          className="bg-[#F05D23] text-white text-sm font-semibold py-2 px-3 rounded-md transition-transform hover:scale-105"
-        >
-          Tandai Belum
-        </button>
       </div>
       <h4 className="text-md font-semibold text-[#323232] mb-2">
         Checklist Perawatan:

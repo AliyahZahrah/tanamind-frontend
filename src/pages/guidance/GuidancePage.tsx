@@ -168,7 +168,7 @@ const GuidancePage: React.FC = () => {
                     </p>
                     <Button
                       onClick={() => handleStartPlanting('CABAI')}
-                      className="bg-green-700 text-white hover:bg-green-800"
+                      className="bg-green-700 text-white hover:bg-green-800 cursor-pointer"
                       disabled={isLoadingUser}
                     >
                       Mulai Tanam Cabai
@@ -234,7 +234,7 @@ const GuidancePage: React.FC = () => {
                     </p>
                     <Button
                       onClick={() => handleStartPlanting('SELADA')}
-                      className="bg-green-700 text-white hover:bg-green-800"
+                      className="bg-green-700 text-white hover:bg-green-800 cursor-pointer"
                       disabled={isLoadingUser}
                     >
                       Mulai Tanam Selada
@@ -300,7 +300,7 @@ const GuidancePage: React.FC = () => {
                     </p>
                     <Button
                       onClick={() => handleStartPlanting('TOMAT')}
-                      className="bg-green-700 text-white hover:bg-green-800"
+                      className="bg-green-700 text-white hover:bg-green-800 cursor-pointer"
                       disabled={isLoadingUser}
                     >
                       Mulai Tanam Tomat

@@ -1,8 +1,6 @@
-'use client';
-
 import type React from 'react';
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaStethoscope, FaSearch, FaExclamationCircle } from 'react-icons/fa';
 
 import DiagnosisHistory from '../../components/DiagnosisHistory';
@@ -14,13 +12,19 @@ import {
   diagnosisApi,
   type PredictionData,
   type ApiError,
+  type SavedDiagnosisData,
 } from '../../lib/api/diagnosis';
 import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
+import { useUser } from '../../hooks/use-user';
+import { toast } from 'sonner';
 
 type PlantType = 'cabai' | 'tomat' | 'selada' | null;
 
 const DiagnosticsPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, isAuthenticated } = useUser();
+
   const [selectedPlant, setSelectedPlant] = useState<PlantType>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -33,6 +37,13 @@ const DiagnosticsPage = () => {
   const [isPredicting, setIsPredicting] = useState(false);
   const [predictionError, setPredictionError] = useState<string | null>(null);
   const [apiMessage, setApiMessage] = useState<string | null>(null);
+  const [isSavingDiagnosis, setIsSavingDiagnosis] = useState(false);
+
+  const [diagnosisHistory, setDiagnosisHistory] = useState<
+    SavedDiagnosisData[]
+  >([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+  const [errorHistory, setErrorHistory] = useState<string | null>(null);
 
   const plants = [
     {
@@ -58,6 +69,36 @@ const DiagnosticsPage = () => {
     },
   ];
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const plantType = queryParams.get('plantType');
+
+    if (plantType && plants.some((p) => p.id === plantType.toLowerCase())) {
+      setSelectedPlant(plantType.toLowerCase() as PlantType);
+    }
+  }, [location.search, plants]);
+
+  const fetchDiagnosisHistory = useCallback(async () => {
+    if (!isAuthenticated || !user?.id) {
+      setIsLoadingHistory(false);
+      return;
+    }
+    setIsLoadingHistory(true);
+    setErrorHistory(null);
+    try {
+      const history = await diagnosisApi.getDiagnosisHistoryByUser(user.id);
+      setDiagnosisHistory(history);
+    } catch (err: any) {
+      setErrorHistory(err.message || 'Gagal memuat riwayat diagnosa.');
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  }, [isAuthenticated, user?.id]);
+
+  useEffect(() => {
+    fetchDiagnosisHistory();
+  }, [fetchDiagnosisHistory]);
+
   const resetForm = () => {
     setSelectedPlant(null);
     setUploadedImage(null);
@@ -65,13 +106,16 @@ const DiagnosticsPage = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    setPredictionResult(null);
+    setPredictionError(null);
+    setApiMessage(null);
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert('Ukuran file maksimal adalah 5MB');
+        toast.error('Ukuran file maksimal adalah 5MB');
         return;
       }
       setIsUploading(true);
@@ -83,7 +127,7 @@ const DiagnosticsPage = () => {
       };
       reader.onerror = () => {
         setIsUploading(false);
-        alert('Gagal membaca file gambar.');
+        toast.error('Gagal membaca file gambar.');
       };
       reader.readAsDataURL(file);
     }
@@ -113,7 +157,11 @@ const DiagnosticsPage = () => {
 
   const handleStartDiagnosis = async () => {
     if (!selectedPlant || !fileInputRef.current?.files?.[0]) {
-      alert('Pilih tanaman dan unggah foto terlebih dahulu');
+      toast.error('Pilih tanaman dan unggah foto terlebih dahulu');
+      return;
+    }
+    if (!isAuthenticated || !user?.id) {
+      toast.error('Anda harus login untuk melakukan diagnosa.');
       return;
     }
 
@@ -148,6 +196,33 @@ const DiagnosticsPage = () => {
     }
   };
 
+  const handleSaveDiagnosis = async () => {
+    if (!predictionResult || !user?.id || !fileInputRef.current?.files?.[0]) {
+      toast.error('Tidak ada hasil diagnosa atau informasi user.');
+      return;
+    }
+
+    setIsSavingDiagnosis(true);
+    try {
+      const file = fileInputRef.current.files[0];
+      await diagnosisApi.saveDiagnosisResult(
+        user.id,
+        predictionResult.tanaman as 'TOMAT' | 'CABAI' | 'SELADA',
+        predictionResult.disease?.name || 'Healthy',
+        predictionResult.confidence,
+        file
+      );
+      toast.success('Diagnosa berhasil disimpan!');
+      setIsResultDialogOpen(false);
+      resetForm();
+      fetchDiagnosisHistory();
+    } catch (err: any) {
+      toast.error(err.message || 'Gagal menyimpan diagnosa.');
+    } finally {
+      setIsSavingDiagnosis(false);
+    }
+  };
+
   const handleNavigateToFullResult = () => {
     if (predictionResult && predictionResult.disease && uploadedImage) {
       const queryParams = new URLSearchParams();
@@ -165,20 +240,17 @@ const DiagnosticsPage = () => {
     setIsResultDialogOpen(isOpen);
     if (!isOpen) {
       resetForm();
-      setPredictionResult(null);
-      setPredictionError(null);
-      setApiMessage(null);
     }
   };
 
   const handleViewDetailHistory = (diagnosisId: string) => {
     console.log('Viewing diagnosis detail from history:', diagnosisId);
-    alert(`Menampilkan detail diagnosa ${diagnosisId} dari history`);
+    toast.info(`Menampilkan detail diagnosa ${diagnosisId} dari history`);
   };
 
   const handleFilterHistory = () => {
     console.log('Opening filter options for history');
-    alert('Filter options: Tanggal, Jenis Penyakit, Status');
+    toast.info('Filter options: Tanggal, Jenis Penyakit, Status');
   };
 
   const canStartDiagnosis =
@@ -264,6 +336,9 @@ const DiagnosticsPage = () => {
 
           <div className="mt-10">
             <DiagnosisHistory
+              historyData={diagnosisHistory}
+              isLoading={isLoadingHistory}
+              error={errorHistory}
               onViewDetail={handleViewDetailHistory}
               onFilter={handleFilterHistory}
             />
@@ -280,6 +355,8 @@ const DiagnosticsPage = () => {
         isPredicting={isPredicting}
         predictionError={predictionError}
         onNavigateToFullResult={handleNavigateToFullResult}
+        onSaveDiagnosis={handleSaveDiagnosis}
+        isSaving={isSavingDiagnosis}
       />
     </div>
   );
