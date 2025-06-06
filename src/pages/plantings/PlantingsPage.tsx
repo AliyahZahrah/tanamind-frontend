@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import {
   FaClock,
@@ -132,8 +130,6 @@ const PlantingsPage = () => {
     alert(
       `Anda memilih ${plant.name}! Tanaman ini akan ditambahkan ke "Sedang Ditanam".`
     );
-    // Basic logic: move plant to growing (more complex state management needed for full feature)
-    // For demo, we just show an alert.
   };
 
   const handleToggleChecklistItem = (
@@ -166,65 +162,14 @@ const PlantingsPage = () => {
 
   const handleMarkAsDone = (plant: ActivePlant) => {
     alert(`${plant.name} ditandai selesai!`);
-    // Basic logic: move plant to done
   };
 
   const handleMarkAsNotDone = (plant: ActivePlant) => {
     alert(`${plant.name} ditandai belum selesai!`);
-    // Basic logic: move plant to growing
   };
 
   return (
     <div className="min-h-screen bg-[#E9F3ED] py-8 px-4 md:px-8">
-      {/* Section 1: Pilih Tanaman */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-bold text-[#323232] mb-2">
-          Pilih Tanaman Yang Ingin Anda Tanam
-        </h2>
-        <p className="text-[#323232] mb-6">
-          Mulai perjalanan berkebun Anda dengan memilih tanaman yang ingin
-          ditanam
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {selectablePlants.map((plant) => (
-            <div
-              key={plant.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 flex flex-col"
-            >
-              <img
-                src={plant.image}
-                alt={plant.name}
-                data-ai-hint="vegetable plant"
-                className="w-full h-48 object-cover rounded-md mb-4"
-              />
-              <h3 className="text-xl font-bold text-[#323232] mb-3">
-                {plant.name}
-              </h3>
-              <ul className="text-sm text-[#323232] space-y-2 mb-4 flex-grow">
-                <li className="flex items-center">
-                  <FaClock className="mr-2 text-[#323232]" /> Waktu panen:{' '}
-                  {plant.harvestTime}
-                </li>
-                <li className="flex items-center">
-                  <FaThermometerHalf className="mr-2 text-[#323232]" /> Suhu
-                  ideal: {plant.idealTemp}
-                </li>
-                <li className="flex items-center">
-                  <FaTint className="mr-2 text-[#323232]" /> Kebutuhan Air:{' '}
-                  {plant.waterNeeds}
-                </li>
-              </ul>
-              <button
-                onClick={() => handleSelectPlant(plant)}
-                className={`${plant.buttonColor} text-white font-semibold py-2 px-4 rounded-md w-full transition-transform hover:scale-105`}
-              >
-                Pilih {plant.name}
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Section 2: Sedang Ditanam */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold text-[#323232] mb-6">
@@ -234,46 +179,49 @@ const PlantingsPage = () => {
           {growingPlants.map((plant) => (
             <div
               key={plant.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6"
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 flex flex-col sm:flex-row gap-4 items-center"
             >
-              <img
-                src={plant.image}
-                alt={plant.name}
-                data-ai-hint="growing plant"
-                className="w-full h-48 object-cover rounded-md mb-4"
-              />
-              <div className="flex justify-between items-center mb-3">
-                <h3 className="text-xl font-bold text-[#323232]">
-                  {plant.name}
-                </h3>
-                <button
-                  onClick={() => handleMarkAsDone(plant)}
-                  className="bg-[#295F4E] text-white text-sm font-semibold py-2 px-3 rounded-md transition-transform hover:scale-105"
-                >
-                  Tandai Selesai
-                </button>
+              <div className="w-full sm:w-1/3 flex-shrink-0">
+                <img
+                  src={plant.image}
+                  alt={plant.name}
+                  className="w-full h-32 object-cover rounded-md"
+                />
               </div>
-              <h4 className="text-md font-semibold text-[#323232] mb-2">
-                Checklist Perawatan:
-              </h4>
-              <ul className="space-y-2 text-sm text-[#323232]">
-                {plant.checklist.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center cursor-pointer"
-                    onClick={() =>
-                      handleToggleChecklistItem(plant.id, item.id, 'growing')
-                    }
+              <div className="flex-1 w-full sm:w-2/3">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
+                  <h3 className="text-xl font-bold text-[#323232] flex-grow text-left">
+                    {plant.name}
+                  </h3>
+                  <button
+                    onClick={() => handleMarkAsDone(plant)}
+                    className="bg-[#295F4E] text-white text-sm font-semibold py-1.5 px-3 rounded-md transition-transform hover:scale-105 whitespace-nowrap mt-2 sm:mt-0"
                   >
-                    {item.checked ? (
-                      <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />
-                    ) : (
-                      <FaRegSquare className="mr-2 text-gray-400 text-lg" />
-                    )}
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
+                    Tandai Selesai
+                  </button>
+                </div>
+                <h4 className="text-md font-semibold text-[#323232] mb-2 text-left">
+                  Checklist Perawatan:
+                </h4>
+                <ul className="space-y-2 text-sm text-[#323232] text-left">
+                  {plant.checklist.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex items-center cursor-pointer"
+                      onClick={() =>
+                        handleToggleChecklistItem(plant.id, item.id, 'growing')
+                      }
+                    >
+                      {item.checked ? (
+                        <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />
+                      ) : (
+                        <FaRegSquare className="mr-2 text-gray-400 text-lg" />
+                      )}
+                      {item.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
         </div>
@@ -294,14 +242,12 @@ const PlantingsPage = () => {
                 <img
                   src={plant.image}
                   alt={plant.name}
-                  data-ai-hint="harvested plant"
                   className="w-full h-48 object-cover rounded-md"
                 />
                 <div className="absolute top-2 right-2 bg-green-500 p-2 rounded-full">
                   <img
                     src="/icons/check.png"
                     alt="Selesai"
-                    data-ai-hint="checkmark icon"
                     className="w-4 h-4"
                   />
                 </div>
@@ -329,8 +275,7 @@ const PlantingsPage = () => {
                       handleToggleChecklistItem(plant.id, item.id, 'done')
                     }
                   >
-                    <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />{' '}
-                    {/* Always checked for done plants based on initial state */}
+                    <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />
                     {item.text}
                   </li>
                 ))}
