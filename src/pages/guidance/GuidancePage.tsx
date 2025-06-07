@@ -129,22 +129,22 @@ const GuidancePage: React.FC = () => {
             </p>
 
             <Tabs defaultValue="cabai" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-4 bg-white rounded-lg">
+              <TabsList className="h-15 bg-white grid w-full grid-cols-3 mb-4 rounded-lg gap-x-2">
                 <TabsTrigger
                   value="cabai"
-                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-[#F4E5C2] text-gray-700 hover:bg-[#E5D5B4] hover:text-gray-900 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
+                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-transparent text-gray-700 hover:bg-[#E5D5B4]/50 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
                 >
                   Cabai
                 </TabsTrigger>
                 <TabsTrigger
                   value="selada"
-                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-[#F4E5C2] text-gray-700 hover:bg-[#E5D5B4] hover:text-gray-900 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
+                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-transparent text-gray-700 hover:bg-[#E5D5B4]/50 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
                 >
                   Selada
                 </TabsTrigger>
                 <TabsTrigger
                   value="tomat"
-                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-[#F4E5C2] text-gray-700 hover:bg-[#E5D5B4] hover:text-gray-900 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
+                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-transparent text-gray-700 hover:bg-[#E5D5B4]/50 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
                 >
                   Tomat
                 </TabsTrigger>
@@ -447,3 +447,5 @@ const GuidancePage: React.FC = () => {
 };
 
 export default GuidancePage;
+
+    
