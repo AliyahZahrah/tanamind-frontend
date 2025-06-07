@@ -67,7 +67,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-[rgba(109,177,147,0.3)] flex items-center justify-center py-6">
+      <main className="flex-1 bg-[#6db1934c] flex items-center justify-center py-6">
         <div className="bg-white max-w-4xl w-full mx-4 md:mx-auto p-8 rounded-xl shadow-xl">
           <div className="grid md:grid-cols-2 gap-8">
             <div className="flex flex-col justify-center">

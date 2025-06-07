@@ -13,7 +13,7 @@ import { Toaster } from 'sonner';
 import AuthCallback from './pages/auth/AuthCallbackGoogle';
 import PlantingsPage from './pages/plantings/PlantingsPage';
 import ProtectedRoute from './components/ProtectedRoutes';
-import NotFoundPage from './pages/Notfoundpage'; // Import the NotFoundPage
+import NotFoundPage from './pages/Notfoundpage'; 
 
 function App() {
   return (

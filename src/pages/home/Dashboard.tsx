@@ -103,7 +103,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <main className="flex flex-col md:flex-row md:items-stretch bg-[#E9F3ED] p-4 md:p-8 gap-6 md:gap-8">
+      <main className="flex flex-col md:flex-row md:items-stretch bg-[#6db1934c] p-4 md:p-8 gap-6 md:gap-8">
         <section className="flex-1 flex flex-col gap-6 md:gap-8">
           <div className="bg-[#F7F7F2] p-6 rounded-2xl shadow-lg flex flex-col md:flex-row md:items-stretch gap-6 flex-1">
             <div className="md:order-1 flex flex-col justify-center flex-1">

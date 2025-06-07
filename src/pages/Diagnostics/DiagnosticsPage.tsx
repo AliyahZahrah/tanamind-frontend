@@ -253,7 +253,7 @@ const DiagnosticsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-[#d8ede3] py-6">
+      <main className="flex-1 bg-[#6db1934c] py-6">
         <div className="container mx-auto px-2">
           <div className="bg-white rounded-lg shadow-sm p-8 mx-auto">
             <div className="flex items-center gap-3 mb-4">
