@@ -30,14 +30,14 @@ const GrowingPlantCard: React.FC<GrowingPlantCardProps> = ({
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 flex flex-col gap-4">
-      <div className="w-full mb-4">
+      <div className="w-full">
         <img
           src={plant.imageUrl}
           alt={plant.localName}
           className="w-full h-48 object-cover rounded-md"
         />
       </div>
-      <div className="w-full">
+      <div className="w-full flex flex-col flex-grow">
         <div className="flex flex-row justify-between items-center mb-3">
           <h3 className="text-xl font-bold text-[#323232] flex-grow text-left">
             {plant.localName}
@@ -52,7 +52,7 @@ const GrowingPlantCard: React.FC<GrowingPlantCardProps> = ({
         <h4 className="text-md font-semibold text-[#323232] mb-2 text-left">
           Checklist Perawatan:
         </h4>
-        <ul className="space-y-2 text-sm text-[#323232] text-left">
+        <ul className="space-y-2 text-sm text-[#323232] text-left mb-auto min-h-[76px]">
           {plant.checklist.length > 0 ? (
             plant.checklist.map((item) => (
               <li
@@ -77,7 +77,7 @@ const GrowingPlantCard: React.FC<GrowingPlantCardProps> = ({
           )}
         </ul>
 
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="mt-auto pt-4 flex flex-col gap-2 min-h-20 justify-center">
           <Link
             to={`/diagnostics?plantingId=${plant.id}&plantType=${plant.tanaman}`}
             className="w-full bg-blue-600 text-white py-2 px-3 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center text-sm font-semibold"

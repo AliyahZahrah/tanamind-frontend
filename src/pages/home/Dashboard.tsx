@@ -174,7 +174,7 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <aside className="w-full md:w-1/3 lg:w-1/4 bg-[#E9F3ED]">
+        <aside className="w-full md:w-1/3 lg:w-1/4">
           <div className="bg-[#F7F7F2] p-4 md:p-6 rounded-2xl shadow-lg">
             <h2 className="text-lg md:text-xl font-bold text-[#323232] mb-1 flex items-center">
               Prediksi Cuaca
