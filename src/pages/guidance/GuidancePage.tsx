@@ -129,22 +129,22 @@ const GuidancePage: React.FC = () => {
             </p>
 
             <Tabs defaultValue="cabai" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-4 bg-[#F4E5C2] rounded-lg">
+              <TabsList className="grid w-full grid-cols-3 mb-4 bg-white rounded-lg">
                 <TabsTrigger
                   value="cabai"
-                  className=" data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-3"
+                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-[#F4E5C2] text-gray-700 hover:bg-[#E5D5B4] hover:text-gray-900 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
                 >
                   Cabai
                 </TabsTrigger>
                 <TabsTrigger
                   value="selada"
-                  className=" data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-3"
+                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-[#F4E5C2] text-gray-700 hover:bg-[#E5D5B4] hover:text-gray-900 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
                 >
                   Selada
                 </TabsTrigger>
                 <TabsTrigger
                   value="tomat"
-                  className=" data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-3"
+                  className="p-3 rounded-md flex items-center justify-center font-medium text-sm bg-[#F4E5C2] text-gray-700 hover:bg-[#E5D5B4] hover:text-gray-900 data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold transition-colors cursor-pointer"
                 >
                   Tomat
                 </TabsTrigger>
@@ -158,6 +158,7 @@ const GuidancePage: React.FC = () => {
                       src={plantInfo.cabai.image}
                       alt={plantInfo.cabai.name}
                       className="w-full h-64 object-cover rounded-lg"
+                      data-ai-hint="chili plant"
                     />
                   </div>
                   <div className="md:w-2/3">
@@ -224,6 +225,7 @@ const GuidancePage: React.FC = () => {
                       src={plantInfo.selada.image}
                       alt={plantInfo.selada.name}
                       className="w-full h-64 object-cover rounded-lg"
+                      data-ai-hint="lettuce plant"
                     />
                   </div>
                   <div className="md:w-2/3">
@@ -290,6 +292,7 @@ const GuidancePage: React.FC = () => {
                       src={plantInfo.tomat.image}
                       alt={plantInfo.tomat.name}
                       className="w-full h-64 object-cover rounded-lg"
+                      data-ai-hint="tomato plant"
                     />
                   </div>
                   <div className="md:w-2/3">
@@ -444,5 +447,3 @@ const GuidancePage: React.FC = () => {
 };
 
 export default GuidancePage;
-
-    
