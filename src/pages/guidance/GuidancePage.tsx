@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Book, Info, ShieldCheck, AlertCircle } from 'lucide-react';
 import {
@@ -128,7 +129,7 @@ const GuidancePage: React.FC = () => {
             </p>
 
             <Tabs defaultValue="cabai" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-4">
+              <TabsList className="grid w-full grid-cols-3 mb-4 bg-[#F4E5C2] rounded-lg">
                 <TabsTrigger
                   value="cabai"
                   className=" data-[state=active]:bg-[#FF6B35] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:font-semibold text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-3"
@@ -443,3 +444,5 @@ const GuidancePage: React.FC = () => {
 };
 
 export default GuidancePage;
+
+    

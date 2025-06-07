@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from '../../hooks/use-user';
 import { plantingApi } from '../../lib/api/planting';
@@ -166,8 +167,8 @@ const PlantingsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#E9F3ED] py-8 px-4 md:px-8">
-      <section className="mb-12">
+    <div className="min-h-screen bg-[#E9F3ED] py-8 px-4 md:px-8 space-y-8">
+      <section className="bg-[#f2f2f2] p-6 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-[#323232] mb-6">
           Sedang Ditanam
         </h2>
@@ -200,7 +201,7 @@ const PlantingsPage = () => {
         )}
       </section>
 
-      <section>
+      <section className="bg-[#f2f2f2] p-6 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-[#323232] mb-6">
           Selesai Ditanam
         </h2>

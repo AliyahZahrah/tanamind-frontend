@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FaCheckSquare, FaHistory } from 'react-icons/fa';
 import type { ActivePlant } from '../utils/plantings';
@@ -28,8 +29,8 @@ const DonePlantCard: React.FC<DonePlantCardProps> = ({
           alt={plant.localName}
           className="w-full h-48 object-cover rounded-md"
         />
-        <div className="absolute top-2 right-2 bg-green-500 p-2 rounded-full">
-          <img src="/icons/check.png" alt="Selesai" className="w-4 h-4" />
+        <div className="absolute top-2 right-2 bg-green-500 p-1 rounded-full">
+          <img src="/icons/check.png" alt="Selesai" className="w-7 h-7" />
         </div>
       </div>
       <div className="flex justify-between items-center mb-3">
@@ -47,7 +48,9 @@ const DonePlantCard: React.FC<DonePlantCardProps> = ({
               onClick={() => onToggleChecklistItem(plant.id, item.id, 'done')}
             >
               <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />
-              {item.text}
+              <span className={item.checked ? 'line-through text-gray-500' : ''}>
+                {item.text}
+              </span>
             </li>
           ))
         ) : (

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   FaRegSquare,
@@ -37,13 +38,13 @@ const GrowingPlantCard: React.FC<GrowingPlantCardProps> = ({
         />
       </div>
       <div className="flex-1 w-full sm:w-2/3">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
+        <div className="flex flex-row justify-between items-center mb-3">
           <h3 className="text-xl font-bold text-[#323232] flex-grow text-left">
             {plant.localName}
           </h3>
           <button
             onClick={() => onMarkAsDone(plant)}
-            className="bg-[#295F4E] text-white text-sm font-semibold py-1.5 px-3 rounded-md transition-transform hover:scale-105 whitespace-nowrap mt-2 sm:mt-0"
+            className="bg-[#295F4E] text-white text-sm font-semibold py-1.5 px-3 rounded-md transition-transform hover:scale-105 whitespace-nowrap"
           >
             Tandai Selesai
           </button>
@@ -66,7 +67,9 @@ const GrowingPlantCard: React.FC<GrowingPlantCardProps> = ({
                 ) : (
                   <FaRegSquare className="mr-2 text-gray-400 text-lg" />
                 )}
-                {item.text}
+                <span className={item.checked ? 'line-through text-gray-500' : ''}>
+                  {item.text}
+                </span>
               </li>
             ))
           ) : (
