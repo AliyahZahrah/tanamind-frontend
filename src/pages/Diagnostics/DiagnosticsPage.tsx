@@ -248,11 +248,6 @@ const DiagnosticsPage = () => {
     toast.info(`Menampilkan detail diagnosa ${diagnosisId} dari history`);
   };
 
-  const handleFilterHistory = () => {
-    console.log('Opening filter options for history');
-    toast.info('Filter options: Tanggal, Jenis Penyakit, Status');
-  };
-
   const canStartDiagnosis =
     selectedPlant && uploadedImage && !isUploading && !isPredicting;
 
@@ -340,7 +335,6 @@ const DiagnosticsPage = () => {
               isLoading={isLoadingHistory}
               error={errorHistory}
               onViewDetail={handleViewDetailHistory}
-              onFilter={handleFilterHistory}
             />
           </div>
         </div>

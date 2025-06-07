@@ -102,7 +102,7 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
                 <span className="font-semibold capitalize">
                   {predictionResult.tanaman}
                 </span>{' '}
-                | Kemiripan:{' '}
+                | Akurasi:{' '}
                 <span className="font-semibold">
                   {(predictionResult.confidence * 100).toFixed(1)}%
                 </span>
@@ -189,25 +189,18 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
               {!isViewMode && predictionResult.disease.name !== 'Healthy' && (
                 <Button
                   onClick={onSaveDiagnosis}
-                  className="w-full sm:w-auto bg-green-700 hover:bg-green-800"
+                  className="w-full sm:w-auto bg-green-700 hover:bg-green-800 cursor-pointer"
                   disabled={isSaving}
                 >
                   <FaSave className="mr-2" />
                   {isSaving ? 'Menyimpan...' : 'Simpan Diagnosa'}
                 </Button>
               )}
-              {!isViewMode && (
-                <Button
-                  onClick={onNavigateToFullResult}
-                  className="w-full sm:w-auto bg-green-600 hover:bg-green-700"
-                >
-                  Lihat Detail & Solusi Lengkap
-                </Button>
-              )}
             </DialogFooter>
           </>
         );
       } else {
+        const isConfidenceLow = predictionResult.confidence < 0.9;
         return (
           <>
             <DialogHeader className="mb-4 text-center">
@@ -219,6 +212,10 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
                 Tanaman:{' '}
                 <span className="font-semibold capitalize">
                   {predictionResult.tanaman}
+                </span>{' '}
+                | Kemiripan:{' '}
+                <span className="font-semibold">
+                  {(predictionResult.confidence * 100).toFixed(1)}%
                 </span>
               </DialogDescription>
             </DialogHeader>
@@ -230,9 +227,10 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
                   className="w-full h-auto max-h-60 object-contain rounded-lg border border-gray-200 shadow-sm mb-4"
                 />
               )}
-              <p className="text-lg text-gray-700">
-                {apiMessage ||
-                  'Penyakit tidak ditemukan atau tingkat kepercayaan model terlalu rendah.'}
+              <p className="text-2xl font-bold text-gray-700">
+                {isConfidenceLow
+                  ? 'Penyakit tidak ditemukan'
+                  : apiMessage || 'Tidak ada penyakit yang terdeteksi.'}
               </p>
               <p className="text-sm text-gray-500">
                 Pastikan gambar yang diunggah jelas, fokus pada bagian tanaman
@@ -247,7 +245,7 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
               >
                 Tutup
               </Button>
-              {!isViewMode && (
+              {!isViewMode && !isConfidenceLow && (
                 <Button
                   onClick={onSaveDiagnosis}
                   className="w-full sm:w-auto bg-green-700 hover:bg-green-800"
