@@ -11,7 +11,7 @@ const Dashboard = () => {
   >(null);
   const [isLoadingWeather, setIsLoadingWeather] = useState(true);
   const [errorWeather, setErrorWeather] = useState<string | null>(null);
-  const [locationName, setLocationName] = useState<string>('Lokasi Anda');
+  const [locationName] = useState<string>('Lokasi Anda');
 
   useEffect(() => {
     const fetchWeather = async () => {
