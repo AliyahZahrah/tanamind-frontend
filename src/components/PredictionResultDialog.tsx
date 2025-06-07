@@ -35,10 +35,8 @@ const PredictionResultDialog: React.FC<PredictionResultDialogProps> = ({
   uploadedImage,
   isPredicting,
   predictionError,
-  onNavigateToFullResult,
   onSaveDiagnosis,
   isSaving,
-  showCloseButton = true,
   isViewMode = false,
 }) => {
   const renderContent = () => {
