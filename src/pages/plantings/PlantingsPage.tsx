@@ -168,7 +168,7 @@ const PlantingsPage = () => {
 
   return (
     <div className="min-h-screen bg-[#6db1934c] py-8 px-4 md:px-8 space-y-8">
-      <section className="bg-[#F2F2F2] p-6 rounded-xl shadow-lg">
+      <section className="bg-[#F7F7F2] p-6 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-[#323232] mb-6">
           Sedang Ditanam
         </h2>
@@ -201,7 +201,7 @@ const PlantingsPage = () => {
         )}
       </section>
 
-      <section className="bg-[#F2F2F2] p-6 rounded-xl shadow-lg">
+      <section className="bg-[#F7F7F2] p-6 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-[#323232] mb-6">
           Selesai Ditanam
         </h2>

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaStethoscope, FaSearch, FaExclamationCircle } from 'react-icons/fa';
+import { FaSearch, FaExclamationCircle } from 'react-icons/fa';
 
 import DiagnosisHistory from '../../components/DiagnosisHistory';
 import PlantSelector from '../../components/PlantSelectorDiagnostics';
@@ -260,7 +260,7 @@ const DiagnosticsPage = () => {
               <h1 className="text-2xl font-bold text-gray-800">
                 Diagnosa Penyakit Tanaman
               </h1>
-              <FaStethoscope className="text-green-600 text-2xl" />
+              <img src="/icons/detection.png" alt="Detection Icon" data-ai-hint="detection disease" className="w-6 h-6" />
             </div>
 
             <p className="text-gray-600 mb-8">

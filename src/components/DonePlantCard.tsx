@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FaCheckSquare, FaHistory, FaRegSquare } from 'react-icons/fa';
+import { FaCheckSquare, FaHistory } from 'react-icons/fa';
 import type { ActivePlant } from '../utils/plantings';
 
 interface DonePlantCardProps {
@@ -9,13 +9,13 @@ interface DonePlantCardProps {
     plantId: string,
     checklistItemId: string,
     section: 'growing' | 'done'
-  ) => void;
+  ) => void; // This prop might be considered for removal if items are fully non-interactive
   onViewDiagnosisHistory: (plantId: string) => void;
 }
 
 const DonePlantCard: React.FC<DonePlantCardProps> = ({
   plant,
-  onToggleChecklistItem,
+  // onToggleChecklistItem, // Intentionally not used to make items non-interactive
   onViewDiagnosisHistory,
 }) => {
   return (
@@ -30,7 +30,7 @@ const DonePlantCard: React.FC<DonePlantCardProps> = ({
           className="w-full h-48 object-cover rounded-md"
         />
         <div className="absolute top-2 right-2 bg-green-500 p-1 rounded-full">
-          <img src="/icons/check.png" alt="Selesai" className="w-5 h-5" />
+          <img src="/icons/check.png" alt="Selesai" className="w-8 h-8" />
         </div>
       </div>
       <div className="flex flex-col flex-grow">
@@ -40,20 +40,16 @@ const DonePlantCard: React.FC<DonePlantCardProps> = ({
         <h4 className="text-md font-semibold text-[#323232] mb-2">
           Checklist Perawatan:
         </h4>
-        <ul className="space-y-2 text-sm text-[#323232] mb-auto min-h-[76px]">
+        <ul className="space-y-2 text-sm text-[#323232] mb-auto">
           {plant.checklist.length > 0 ? (
             plant.checklist.map((item) => (
               <li
                 key={item.id}
-                className="flex items-center cursor-pointer"
-                onClick={() => onToggleChecklistItem(plant.id, item.id, 'done')}
+                className="flex items-center" // Removed cursor-pointer
+                // onClick={() => onToggleChecklistItem(plant.id, item.id, 'done')} // Removed onClick
               >
-                {item.checked ? (
-                  <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />
-                ) : (
-                  <FaRegSquare className="mr-2 text-gray-400 text-lg" />
-                )}
-                <span className={item.checked ? 'line-through text-gray-500' : ''}>
+                <FaCheckSquare className="mr-2 text-[#295F4E] text-lg" />
+                <span className="line-through text-gray-500">
                   {item.text}
                 </span>
               </li>
@@ -63,7 +59,7 @@ const DonePlantCard: React.FC<DonePlantCardProps> = ({
           )}
         </ul>
 
-        <div className="mt-auto pt-4 min-h-20 flex flex-col justify-center items-center">
+        <div className="mt-auto pt-4 flex flex-col justify-center items-center">
           {plant.diagnosisCount > 0 ? (
             <button
               onClick={() => onViewDiagnosisHistory(plant.id)}
@@ -73,7 +69,7 @@ const DonePlantCard: React.FC<DonePlantCardProps> = ({
               {plant.diagnosisCount})
             </button>
           ) : (
-            <div className="w-full h-full"></div> // Placeholder to maintain height
+            <div className="w-full h-full"></div>
           )}
         </div>
       </div>
