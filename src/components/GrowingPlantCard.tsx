@@ -28,6 +28,9 @@ const GrowingPlantCard: React.FC<GrowingPlantCardProps> = ({
   onDetectDisease,
   onViewDiagnosisHistory,
 }) => {
+  const allChecklistItemsChecked =
+    plant.checklist.length > 0 && plant.checklist.every((item) => item.checked);
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 flex flex-col gap-4">
       <div className="w-full">
@@ -44,7 +47,12 @@ const GrowingPlantCard: React.FC<GrowingPlantCardProps> = ({
           </h3>
           <button
             onClick={() => onMarkAsDone(plant)}
-            className="bg-[#295F4E] text-white text-sm font-semibold py-1.5 px-3 rounded-md transition-transform hover:scale-105 whitespace-nowrap"
+            disabled={!allChecklistItemsChecked}
+            className={`text-white text-sm font-semibold py-1.5 px-3 rounded-md transition-transform whitespace-nowrap ${
+              allChecklistItemsChecked
+                ? 'bg-[#295F4E] hover:scale-105 cursor-pointer'
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
           >
             Tandai Selesai
           </button>

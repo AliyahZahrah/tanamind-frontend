@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { FaEye } from 'react-icons/fa';
+import { MdHistory } from 'react-icons/md';
 import type { SavedDiagnosisData } from '../lib/api/diagnosis';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
@@ -120,7 +121,7 @@ const DiagnosisHistory: React.FC<DiagnosisHistoryProps> = ({
           ))
         ) : (
           <div className="text-center py-8 text-gray-500">
-            <img src="/icons/history.png" alt="History Icon" data-ai-hint="history icon" className="w-12 h-12 mx-auto mb-3" />
+            <MdHistory className="text-5xl sm:text-6xl text-gray-400 mx-auto mb-3" />
             <p>Belum ada riwayat diagnosa</p>
             <p className="text-sm">
               Mulai diagnosa pertama Anda untuk melihat riwayat di sini

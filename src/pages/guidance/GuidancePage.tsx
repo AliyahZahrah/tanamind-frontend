@@ -117,8 +117,8 @@ const GuidancePage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-[#6db1934c] py-6">
-        <div className="container mx-auto px-2">
+      <main className="flex-1 bg-[#6db1934c] p-4 md:p-8">
+        <div className="container mx-auto">
           <div className="bg-[#F7F7F2] rounded-lg shadow-sm p-6">
             <h1 className="text-2xl font-bold text-gray-800 mb-2">
               Panduan Penanaman Hidroponik
@@ -447,5 +447,3 @@ const GuidancePage: React.FC = () => {
 };
 
 export default GuidancePage;
-
-    

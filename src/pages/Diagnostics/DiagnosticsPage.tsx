@@ -1,3 +1,4 @@
+
 import type React from 'react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -216,8 +217,7 @@ const DiagnosticsPage = () => {
       setIsResultDialogOpen(false);
       resetForm();
       fetchDiagnosisHistory();
-    } catch (err: any) {
-      toast.error(err.message || 'Gagal menyimpan diagnosa.');
+    } catch (err: any) Gagal menyimpan diagnosa.`);
     } finally {
       setIsSavingDiagnosis(false);
     }
@@ -253,8 +253,8 @@ const DiagnosticsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-[#6db1934c] py-6">
-        <div className="container mx-auto px-2">
+      <main className="flex-1 bg-[#6db1934c] p-4 md:p-8">
+        <div className="container mx-auto">
           <div className="bg-white rounded-lg shadow-sm p-8 mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <h1 className="text-2xl font-bold text-gray-800">
