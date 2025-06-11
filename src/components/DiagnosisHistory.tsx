@@ -87,7 +87,7 @@ const DiagnosisHistory: React.FC<DiagnosisHistoryProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3" style={{ gap: '12px' }}> {/* Added to synchronize spacing with DiagnosticsPage */}
           <h2 className="text-xl font-bold text-gray-800">
             History Output Hasil Diagnosa Tanaman
           </h2>
