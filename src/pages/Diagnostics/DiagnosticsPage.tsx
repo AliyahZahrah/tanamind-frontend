@@ -77,7 +77,7 @@ const DiagnosticsPage = () => {
     if (plantType && plants.some((p) => p.id === plantType.toLowerCase())) {
       setSelectedPlant(plantType.toLowerCase() as PlantType);
     }
-  }, [location.search, plants]);
+  }, [location.search, plants]); // Added plants to dependency array as it's used inside
 
   const fetchDiagnosisHistory = useCallback(async () => {
     if (!isAuthenticated || !user?.id) {
@@ -142,7 +142,7 @@ const DiagnosticsPage = () => {
     setIsUploading(true);
     setUploadedFileName('camera_capture.jpg');
     setTimeout(() => {
-      setUploadedImage('/img/placeholder-plant.jpg');
+      setUploadedImage('/img/placeholder-plant.jpg'); // Ensure this placeholder exists or handle it
       setIsUploading(false);
     }, 1500);
   };
@@ -217,7 +217,8 @@ const DiagnosticsPage = () => {
       setIsResultDialogOpen(false);
       resetForm();
       fetchDiagnosisHistory();
-    } catch (err: any) Gagal menyimpan diagnosa.`);
+    } catch (err: any) {
+      toast.error(err.message || `Gagal menyimpan diagnosa.`);
     } finally {
       setIsSavingDiagnosis(false);
     }
