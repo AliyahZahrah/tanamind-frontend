@@ -129,7 +129,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-[#F7F7F2] px-6 py-3 shadow-sm">
+    <nav className="bg-[#F7F7F2] px-6 py-3 shadow-sm relative z-30">
       <div className="w-full mx-auto flex items-center justify-between">
         <Link to="/">
           <img
