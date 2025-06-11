@@ -88,10 +88,10 @@ const DiagnosisHistory: React.FC<DiagnosisHistoryProps> = ({
     <div className="bg-white rounded-lg shadow-sm p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3" style={{ gap: '12px' }}> {/* Added to synchronize spacing with DiagnosticsPage */}
-          <h2 className="text-xl font-bold text-gray-800">
+          <h2 className="text-xl font-bold text-gray-800 mr-2"> {/* Adjusted margin for spacing */}
             History Output Hasil Diagnosa Tanaman
           </h2>
-          <img src="/icons/history.png" alt="History Icon" data-ai-hint="history icon" className="w-6 h-6 ml-2" />
+          <img src="/icons/history.png" alt="History Icon" data-ai-hint="history icon" className="w-6 h-6" /> {/* Removed ml-2 */}
         </div>
       </div>
 
