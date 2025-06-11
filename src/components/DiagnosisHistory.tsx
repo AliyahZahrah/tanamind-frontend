@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { FaSearch, FaEye } from 'react-icons/fa';
+import { FaEye } from 'react-icons/fa';
 import type { SavedDiagnosisData } from '../lib/api/diagnosis';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
@@ -86,10 +87,10 @@ const DiagnosisHistory: React.FC<DiagnosisHistoryProps> = ({
     <div className="bg-white rounded-lg shadow-sm p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <FaSearch className="text-green-600 text-xl" />
           <h2 className="text-xl font-bold text-gray-800">
             History Output Hasil Diagnosa Tanaman
           </h2>
+          <img src="/icons/history.png" alt="History Icon" data-ai-hint="history icon" className="w-6 h-6 ml-2" />
         </div>
       </div>
 
@@ -119,7 +120,7 @@ const DiagnosisHistory: React.FC<DiagnosisHistoryProps> = ({
           ))
         ) : (
           <div className="text-center py-8 text-gray-500">
-            <FaSearch className="text-4xl text-gray-300 mx-auto mb-3" />
+            <img src="/icons/history.png" alt="History Icon" data-ai-hint="history icon" className="w-12 h-12 mx-auto mb-3" />
             <p>Belum ada riwayat diagnosa</p>
             <p className="text-sm">
               Mulai diagnosa pertama Anda untuk melihat riwayat di sini
