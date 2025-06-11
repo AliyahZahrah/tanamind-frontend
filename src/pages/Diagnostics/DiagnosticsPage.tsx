@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaStethoscope, FaSearch, FaExclamationCircle } from 'react-icons/fa';
+import { FaSearch, FaExclamationCircle } from 'react-icons/fa';
 
 import DiagnosisHistory from '../../components/DiagnosisHistory';
 import PlantSelector from '../../components/PlantSelectorDiagnostics';
@@ -253,14 +253,14 @@ const DiagnosticsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-[#d8ede3] py-6">
+      <main className="flex-1 bg-[#6db1934c] py-6">
         <div className="container mx-auto px-2">
           <div className="bg-white rounded-lg shadow-sm p-8 mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <h1 className="text-2xl font-bold text-gray-800">
                 Diagnosa Penyakit Tanaman
               </h1>
-              <FaStethoscope className="text-green-600 text-2xl" />
+              <img src="/icons/detection.png" alt="Detection Icon" data-ai-hint="detection disease" className="w-6 h-6" />
             </div>
 
             <p className="text-gray-600 mb-8">

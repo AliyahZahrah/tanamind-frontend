@@ -13,6 +13,7 @@ import { Toaster } from 'sonner';
 import AuthCallback from './pages/auth/AuthCallbackGoogle';
 import PlantingsPage from './pages/plantings/PlantingsPage';
 import ProtectedRoute from './components/ProtectedRoutes';
+import NotFoundPage from './pages/Notfoundpage'; 
 
 function App() {
   return (
@@ -48,6 +49,9 @@ function App() {
           <Route path="/new-password" element={<NewPassword />} />
           <Route path="/callback-google" element={<AuthCallback />} />
         </Route>
+
+        {/* Catch-all route for 404 Not Found page */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
