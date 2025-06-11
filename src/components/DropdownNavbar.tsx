@@ -68,7 +68,7 @@ const UserDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
+        <div className="absolute mt-2 w-64 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50 sm:right-0 left-1/2 transform -translate-x-1/2">
           <div className="px-4 py-3 border-b border-gray-100">
             <p className="text-sm font-medium text-gray-900">{user.name}</p>
             <p className="text-sm text-gray-500 truncate">{user.email}</p>
